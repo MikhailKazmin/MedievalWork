@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Build
+namespace Assets.Scripts.Builds
 {
     interface IMineBuild: IBuild
     {

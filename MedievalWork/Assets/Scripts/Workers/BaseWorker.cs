@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Workers
 {
     public class BaseWorker : MonoBehaviour, IWorker
     {
@@ -17,6 +17,7 @@ namespace Assets.Scripts
         [SerializeField] private float speed = 100f;
 
         [SerializeField] private Animator animator;
+        private AnimatorController controller;
         public Dictionary<ResourcesName, int> ResourcesCount
         {
             get => ResourcesCount;

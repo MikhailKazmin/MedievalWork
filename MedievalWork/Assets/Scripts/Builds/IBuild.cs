@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts.Build
+namespace Assets.Scripts.Builds
 {
     interface IBuild : IObjectLogicsGame
     {
-        void IncreaseCount(ResourcesName resourcesName, int Count);
+        int IncreaseCount(ResourcesName resourcesName, int Count);
         void ReduceCount(ResourcesName resourcesName, int Count);
     }
 }
