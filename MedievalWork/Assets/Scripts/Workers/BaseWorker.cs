@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.ResourcesItem;
+using Assets.Scripts;
 using TMPro;
 using System.Linq;
 
@@ -11,7 +12,6 @@ namespace Assets.Scripts.Workers
 {
     public class BaseWorker : MonoBehaviour, IWorker
     {
-        
         private RectTransform StorageRect;
         private Builds.Storage StorageScripts;
         [SerializeField] private RectTransform Mine;
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Workers
         [SerializeField] private Vector2 Target;
         private RectTransform Pos;
         [SerializeField] private GameObject PanelCart;
-        private float timeMove = 100f;
+        public float timeMove = 100f;
         private float time = 0.01f;
         private float speed = 70f;
 
@@ -148,6 +148,7 @@ namespace Assets.Scripts.Workers
 
         private void PrintCurrentPropertiesCart()
         {
+
             PanelCart.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = transform.GetComponent<Image>().sprite; //ObjectCurrent
             PanelCart.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = CountMax.ToString(); //maxCount
             PanelCart.transform.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = (10).ToString(); //velocity
@@ -155,6 +156,10 @@ namespace Assets.Scripts.Workers
 
         private void PrintCurrentResourcesInCart()
         {
+            for (int i = 0; i < PanelCart.transform.GetChild(1).childCount; i++)
+            {
+                PanelCart.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
             int k = 0;
             var PrefabResource = PanelCart.transform.GetChild(1).GetChild(0).gameObject;
             var Prefab = PanelCart.transform.GetChild(1);
@@ -176,10 +181,7 @@ namespace Assets.Scripts.Workers
         {
             PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
             PanelCart.transform.parent.gameObject.SetActive(false);
-            for (int i = 0; i < PanelCart.transform.GetChild(1).childCount; i++)
-            {
-                PanelCart.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
-            }
+
         }
         private void OnButtonImproveCountMax()
         {
