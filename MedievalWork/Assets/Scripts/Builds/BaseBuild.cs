@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.ResourcesItem;
 
 namespace Assets.Scripts.Builds
 {
@@ -35,10 +36,12 @@ namespace Assets.Scripts.Builds
             var SaveDict = new Dictionary<ResourcesName, int>();
             if (ResourceIsSave)// из сохранения
             {
-                SaveDict.Add(ResourcesName.Rock, 5);
-                SaveDict.Add(ResourcesName.Wood, 10);
-                SaveDict.Add(ResourcesName.Rock1, 15);
-                SaveDict.Add(ResourcesName.Wood1, 20);
+                int countResourceMiningInBuild = Random.Range(1, 4);
+
+                for (int i = 0; i < countResourceMiningInBuild; i++)
+                {
+                    SaveDict.Add((ResourcesName)i, Random.Range(1, 15));
+                }
             }
             return SaveDict;
         }

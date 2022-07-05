@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Assets.Scripts.ResourcesItem;
 
 namespace Assets.Scripts.Builds
 {

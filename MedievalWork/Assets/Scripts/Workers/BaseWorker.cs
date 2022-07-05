@@ -3,19 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.ResourcesItem;
+using TMPro;
+using System.Linq;
 
 namespace Assets.Scripts.Workers
 {
     public class BaseWorker : MonoBehaviour, IWorker
     {
-
+        
         private RectTransform StorageRect;
         private Builds.Storage StorageScripts;
         [SerializeField] private RectTransform Mine;
         private Builds.MineBuild MineScripts;
         [SerializeField] private Vector2 Target;
         private RectTransform Pos;
-
+        [SerializeField] private GameObject PanelCart;
         private float timeMove = 100f;
         private float time = 0.01f;
         private float speed = 70f;
@@ -25,6 +28,7 @@ namespace Assets.Scripts.Workers
 
         private DelivaryResouces delivaryResouces;
         private GameObject ResourcesGroup;
+        private List<DataResourcesItem> dataResources = new List<DataResourcesItem>();
         private Button ButtonClick;
 
         public Dictionary<ResourcesName, int> ResourcesCount
@@ -34,8 +38,9 @@ namespace Assets.Scripts.Workers
         }
 
         private int CountMax = 5;
-        public void Init(Builds.MineBuild MineScripts)
+        public void Init(GameObject PanelCart, Builds.MineBuild MineScripts)
         {
+            this.PanelCart = PanelCart;
             this.MineScripts = MineScripts;
         }
         private void Start()
@@ -54,6 +59,7 @@ namespace Assets.Scripts.Workers
             Mine = MineScripts.transform.GetComponent<RectTransform>();
             Target = Mine.anchoredPosition;
             ResourcesGroup = Resources.Load("DelivaryGroup") as GameObject;
+            dataResources = Resources.LoadAll<DataResourcesItem>("Resources").ToList();
             ButtonClick = GetComponent<Button>();
             ButtonClick.onClick.AddListener(() => OnClick());
             StartCoroutine(MoveWorker());
@@ -97,7 +103,7 @@ namespace Assets.Scripts.Workers
             var pos = obj.GetComponent<RectTransform>();
             pos.anchoredPosition = Target;
             delivaryResouces = obj.GetComponent<DelivaryResouces>();
-            delivaryResouces.Init(ResourcesCount);
+            delivaryResouces.Init(ResourcesCount, dataResources);
             Destroy(obj,1f);
         }
         public void Move()
@@ -113,23 +119,74 @@ namespace Assets.Scripts.Workers
             }
             else animator.Play(AnimName.Up.ToString());
         }
+        //public void OnClick()
+        //{
+        //    Debug.Log($"On Click to {this.GetType()}");
+        //    if (ResourcesCount.Count == 0)
+        //    {
+        //        Debug.Log($" Not Resource ");
+        //    }
+        //    else
+        //    {
+        //        string str = "";
+        //        foreach (var item in ResourcesCount)
+        //        {
+        //            str += $"Resource[{item.Key}] = {item.Value}\n";
+        //        }
+        //        Debug.Log(str);
+        //    }
+        //}
         public void OnClick()
         {
-            Debug.Log($"On Click to {this.GetType()}");
-            if (ResourcesCount.Count == 0)
+            PanelCart.transform.parent.gameObject.SetActive(true);
+            PrintCurrentResourcesInCart();
+            PrintCurrentPropertiesCart();
+
+            PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener( () => OnButtonImproveCountMax() );
+            PanelCart.transform.GetChild(2).GetChild(2).GetComponent<Button>().onClick.AddListener( () => OnExitPanelCart() );
+        }
+
+        private void PrintCurrentPropertiesCart()
+        {
+            PanelCart.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = transform.GetComponent<Image>().sprite; //ObjectCurrent
+            PanelCart.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = CountMax.ToString(); //maxCount
+            PanelCart.transform.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = (10).ToString(); //velocity
+        }
+
+        private void PrintCurrentResourcesInCart()
+        {
+            int k = 0;
+            var PrefabResource = PanelCart.transform.GetChild(1).GetChild(0).gameObject;
+            var Prefab = PanelCart.transform.GetChild(1);
+            foreach (var Resource in ResourcesCount)
             {
-                Debug.Log($" Not Resource ");
-            }
-            else
-            {
-                string str = "";
-                foreach (var item in ResourcesCount)
+                if (ResourcesCount.Count > k && k != 0 && ResourcesCount.Count > PanelCart.transform.GetChild(1).childCount)
                 {
-                    str += $"Resource[{item.Key}] = {item.Value}\n";
+                    var qwee = Instantiate(PrefabResource, PrefabResource.transform.parent);
                 }
-                Debug.Log(str);
+                Prefab.GetChild(k).gameObject.SetActive(true);
+                var dataResource = dataResources.Where(p => p.resourcesName == Resource.Key).Select(p => p);
+                Prefab.GetChild(k).GetChild(0).GetComponent<Image>().sprite = dataResource.First().sprite; //Icon
+                Prefab.GetChild(k).GetChild(1).GetComponent<TextMeshProUGUI>().text = Resource.Value.ToString(); //Count
+                k++;
             }
         }
+
+        private void OnExitPanelCart()
+        {
+            PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
+            PanelCart.transform.parent.gameObject.SetActive(false);
+            for (int i = 0; i < PanelCart.transform.GetChild(1).childCount; i++)
+            {
+                PanelCart.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        private void OnButtonImproveCountMax()
+        {
+            CountMax += 5;
+            PanelCart.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = CountMax.ToString(); //maxCount
+        }
+
         public void SetTarget()
         {
             if (Pos.anchoredPosition == Mine.anchoredPosition)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.ResourcesItem
 {
     interface IResources
     {
@@ -12,9 +12,9 @@ namespace Assets.Scripts
 
     public enum ResourcesName
     {
-        Wood,
-        Rock,
-        Wood1,
-        Rock1
+        WoodLog,
+        Wool,
+        Coal,
+        WoodenPlank
     }
 }
