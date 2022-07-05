@@ -9,6 +9,7 @@ namespace Assets.Scripts.Builds
     interface IBuild : IObjectLogicsGame
     {
         int IncreaseCount(ResourcesName resourcesName, int Count);
-        void ReduceCount(ResourcesName resourcesName, int Count);
+        int ReduceCount(ResourcesName resourcesName, int Count);
+        
     }
 }

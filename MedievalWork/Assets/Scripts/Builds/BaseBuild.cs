@@ -6,8 +6,9 @@ namespace Assets.Scripts.Builds
 {
     public abstract class BaseBuild : MonoBehaviour
     {
-        protected Button But;
+        protected Button ButtonClick;
         [SerializeField] private bool ResourceIsSave = false;
+
         //public Dictionary<ResourcesName, int> ResourcesCount
         //{
         //    get => ResourcesCount;
@@ -21,10 +22,11 @@ namespace Assets.Scripts.Builds
         }
         protected virtual void Awake()
         {
-            But = GetComponent<Button>();
-            But.onClick.AddListener(() => OnClick());
+            ButtonClick = GetComponent<Button>();
+            ButtonClick.onClick.AddListener(() => OnClick());
             Debug.Log($"Awake to {this.GetType()}");
             ResourcesCount = GetResources();
+            
         }
 
 
@@ -35,6 +37,8 @@ namespace Assets.Scripts.Builds
             {
                 SaveDict.Add(ResourcesName.Rock, 5);
                 SaveDict.Add(ResourcesName.Wood, 10);
+                SaveDict.Add(ResourcesName.Rock1, 15);
+                SaveDict.Add(ResourcesName.Wood1, 20);
             }
             return SaveDict;
         }
@@ -57,13 +61,13 @@ namespace Assets.Scripts.Builds
             
         }
 
-        public abstract void ReduceCount(ResourcesName resourcesName, int Count);
+        public abstract int ReduceCount(ResourcesName resourcesName, int Count);
 
 
         public abstract int IncreaseCount(ResourcesName resourcesName, int Count);
         protected void OnDestroy()
         {
-            But.onClick.RemoveAllListeners();
+            ButtonClick.onClick.RemoveAllListeners();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Builds
@@ -24,8 +25,6 @@ namespace Assets.Scripts.Builds
                     test.Add(item.Key, IncreaseCount(item.Key, 1));
                 }
                 ResourcesCount = test;
-
-
             }
         }
 
@@ -34,17 +33,28 @@ namespace Assets.Scripts.Builds
             return ResourcesCount[resourcesName] + Count;
         }
 
-        public override void ReduceCount(ResourcesName resourcesName, int Count)
+        public override int ReduceCount(ResourcesName resourcesName, int Count)
         {
             if (ResourcesCount[resourcesName] >= Count)
             {
                 ResourcesCount[resourcesName] -= Count;
+                return Count;
             }
             else
             {
+                var CurrentCount = ResourcesCount[resourcesName];
                 ResourcesCount[resourcesName] = 0;
+                return CurrentCount;
             }
             
+            
+        }
+
+        public ResourcesName[] GetResoursesName()
+        {
+            ResourcesName[] arr = new ResourcesName[ResourcesCount.Count];
+
+            return arr = ResourcesCount.Keys.ToArray();
         }
     }
 }

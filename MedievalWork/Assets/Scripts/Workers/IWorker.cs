@@ -10,5 +10,6 @@ namespace Assets.Scripts
     {
         void Move();
         void SetTarget();
+        void PrintDeliveryResources();
     }
 }

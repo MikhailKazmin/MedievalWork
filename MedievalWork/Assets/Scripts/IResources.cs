@@ -13,6 +13,8 @@ namespace Assets.Scripts
     public enum ResourcesName
     {
         Wood,
-        Rock
+        Rock,
+        Wood1,
+        Rock1
     }
 }
