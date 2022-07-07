@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8607528118153875552}
   - component: {fileID: 8607528118153875553}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Recource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 8607528118915622384}
   - component: {fileID: 8607528118915622386}
   - component: {fileID: 8607528118915622385}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 8607528119768885401}
   - component: {fileID: 8607528119768885402}
   - component: {fileID: 2358068979792454231}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: DelivaryGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 8607528119916695318}
   - component: {fileID: 8607528119916695312}
   - component: {fileID: 8607528119916695319}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Count
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Workers
 {
     interface IWorker : IObjectLogicsGame
     {
-        void Move();
-        void SetTarget();
-        void PrintDeliveryResources();
+        IEnumerator Move();
     }
 }

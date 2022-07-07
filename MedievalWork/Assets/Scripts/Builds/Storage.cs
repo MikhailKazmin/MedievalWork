@@ -5,10 +5,10 @@ using Assets.Scripts.ResourcesItem;
 
 namespace Assets.Scripts.Builds
 {
-    public class Storage : BaseBuild, IStorage
+    public class Storage : Base, IStorage
     {
         private static Storage Instanse = null;
-
+        [SerializeField] private GameObject PanelStorage;
         public static Storage GetInstanse() => Instanse;
 
         protected override void Awake()
@@ -35,6 +35,10 @@ namespace Assets.Scripts.Builds
             {
                 ResourcesCount.Add(resourcesName,Count);
             }
+            if (PanelStorage.transform.parent.gameObject.activeSelf == true)
+            {
+                ButtonClick.onClick?.Invoke();
+            }
             return Count;
             
         }
@@ -44,7 +48,11 @@ namespace Assets.Scripts.Builds
             throw new System.NotImplementedException();
         }
 
-        
+        public override void OnClick()
+        {
+            //base.OnClick();
+            UIMenuStorage.OnPrintedCurrent(PanelStorage, ResourcesCount, dataResources);
+        }    
 
     }
 }

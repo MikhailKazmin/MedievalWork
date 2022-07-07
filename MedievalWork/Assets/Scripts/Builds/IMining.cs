@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Builds
 {
-    interface IProduceBuild: IBuild
+    interface IMining: IBuild
     {
-
+        
     }
 }

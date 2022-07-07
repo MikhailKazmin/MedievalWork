@@ -17,4 +17,11 @@ namespace Assets.Scripts.ResourcesItem
         Coal,
         WoodenPlank
     }
+
+    public enum ResourcesType
+    {
+        Mining,
+        Craft,
+        Money
+    }
 }

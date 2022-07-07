@@ -5,13 +5,14 @@ using Assets.Scripts.ResourcesItem;
 
 namespace Assets.Scripts.Builds
 {
-    public class CreatorBuilds : MonoBehaviour
+    public class Creator : MonoBehaviour
     {
         [SerializeField] private GameObject MineObj;
+        [SerializeField] private GameObject PanelBuilds;
         public List<GameObject> MinesList { get; private set; } = new List<GameObject>();
-        private static CreatorBuilds Instanse = null;
+        private static Creator Instanse = null;
 
-        public static CreatorBuilds GetInstanse() => Instanse;
+        public static Creator GetInstanse() => Instanse;
 
         private void Awake()
         {
@@ -27,6 +28,7 @@ namespace Assets.Scripts.Builds
                 MinesList.Add(obj);
 
             }
+            MineObj.GetComponent<Mining>().Init(PanelBuilds);
         }
 
 

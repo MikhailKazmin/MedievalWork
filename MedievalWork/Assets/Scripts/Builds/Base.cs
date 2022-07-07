@@ -2,20 +2,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.ResourcesItem;
+using System.Linq;
 
 namespace Assets.Scripts.Builds
 {
-    public abstract class BaseBuild : MonoBehaviour
+    public abstract class Base : MonoBehaviour
     {
         protected Button ButtonClick;
         [SerializeField] private bool ResourceIsSave = false;
-
+        protected bool isStorageSelection = false;
+        public delegate void Del();
+        public Del OnUnSelictionStorage;
         //public Dictionary<ResourcesName, int> ResourcesCount
         //{
         //    get => ResourcesCount;
         //    protected set => ResourcesCount = value;
         //}
-
+        protected List<Data> dataResources;
         public Dictionary<ResourcesName, int> ResourcesCount
         {
             get;
@@ -27,7 +30,8 @@ namespace Assets.Scripts.Builds
             ButtonClick.onClick.AddListener(() => OnClick());
             Debug.Log($"Awake to {this.GetType()}");
             ResourcesCount = GetResources();
-            
+            dataResources = Resources.LoadAll<Data>("Resources").ToList();
+            OnUnSelictionStorage += () => isStorageSelection = false;
         }
 
 
@@ -38,15 +42,16 @@ namespace Assets.Scripts.Builds
             {
                 int countResourceMiningInBuild = Random.Range(1, 4);
 
-                for (int i = 0; i < countResourceMiningInBuild; i++)
+                for (int i = 0; i <= countResourceMiningInBuild; i++)
                 {
-                    SaveDict.Add((ResourcesName)i, Random.Range(1, 15));
+                    SaveDict.Add((ResourcesName)i, Random.Range(1, 40));
                 }
             }
             return SaveDict;
         }
         public virtual void OnClick()
         {
+            
             Debug.Log($"On Click to {this.GetType()}");
             if (ResourcesCount.Count == 0)
             {

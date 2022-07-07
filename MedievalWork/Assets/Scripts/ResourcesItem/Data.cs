@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Assets.Scripts.ResourcesItem
 {
     [CreateAssetMenu(menuName = "Resources", fileName = "New Resource")]
-    public class DataResourcesItem : ScriptableObject, IResources
+    public class Data : ScriptableObject, IResources
     {
         public Sprite sprite;
         public ResourcesName resourcesName;
