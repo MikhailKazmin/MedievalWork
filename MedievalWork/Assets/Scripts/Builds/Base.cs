@@ -13,17 +13,15 @@ namespace Assets.Scripts.Builds
         protected bool isStorageSelection = false;
         public delegate void Del();
         public Del OnUnSelictionStorage;
+        
         //public Dictionary<ResourcesName, int> ResourcesCount
         //{
         //    get => ResourcesCount;
         //    protected set => ResourcesCount = value;
         //}
-        protected List<Data> dataResources;
-        public Dictionary<ResourcesName, int> ResourcesCount
-        {
-            get;
-            protected set;
-        }
+        public List<Data> dataResources { get; protected set; }
+        public Dictionary<ResourcesName, int> ResourcesCount { get; protected set; }
+
         protected virtual void Awake()
         {
             ButtonClick = GetComponent<Button>();

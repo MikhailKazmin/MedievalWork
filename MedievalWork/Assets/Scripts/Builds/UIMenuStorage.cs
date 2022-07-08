@@ -8,46 +8,79 @@ using TMPro;
 
 namespace Assets.Scripts.Builds
 {
-    public class UIMenuStorage : MonoBehaviour
+    public class UIMenuStorage : UIBase
     {
-        private static GameObject prefabResource;
-        public static void OnPrintedCurrent(GameObject PanelStorage, Dictionary<ResourcesName, int> ResourcesCount, List<Data> dataResources)
-        {
-            if (PanelStorage.transform.parent.gameObject.activeSelf != true)
-            {
-                PanelStorage.SetActive(true);
-                PanelStorage.transform.parent.gameObject.SetActive(true);
-                PanelStorage.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => OnExitPanelStorage(PanelStorage));
-                
-                //    PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script, PanelCart));
+        private Storage _script;
 
-            }
-            PrintResourcesInStorage(PanelStorage, ResourcesCount, dataResources);
-            //PrintCurrentResourcesInCart(ResourcesCount, dataResources, PanelCart);
-        }
-        private static void PrintResourcesInStorage(GameObject PanelStorage, Dictionary<ResourcesName, int> ResourcesCount, List<Data> dataResources)
+        private Transform _Data;
+        private Transform _DataPref;
+        private Image _IconDataPref;
+        private TextMeshProUGUI _NameDataPref;
+        private TextMeshProUGUI _CostDataPref;
+        private TextMeshProUGUI _CountDataPref;
+
+        private Transform _TypeResources;
+        private Transform _TypeResourcesPref;
+        private void Init(GameObject Panel, Base Script)
         {
-            if (prefabResource == null)
+            if (_Name == null && _Exit == null && _MenuObjects == null)
             {
-                prefabResource = PanelStorage.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+                _MenuObjects = Panel.transform.parent;
+                _Name = _MenuObjects.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+                _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
             }
-            
-            for (int i = 0; i < prefabResource.transform.parent.childCount; i++)
+
+            _script = Script as Storage;
+            _Panel = Panel.transform;
+
+            _Data = _Panel.GetChild(0).GetChild(1);
+            _DataPref = _Data.GetChild(0);
+            _IconDataPref = _DataPref.GetChild(0).GetComponent<Image>();
+            _NameDataPref = _DataPref.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _CountDataPref = _DataPref.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _CostDataPref = _DataPref.GetChild(3).GetComponent<TextMeshProUGUI>();
+
+            _TypeResources = _Panel.GetChild(0).GetChild(0);
+            _TypeResourcesPref = _TypeResources.GetChild(0);
+
+        }
+        public void OnPrintedCurrent(GameObject Panel, Base Script)
+        {
+            if (Panel.transform.parent.gameObject.activeSelf != true)
             {
-                prefabResource.transform.parent.GetChild(i).gameObject.SetActive(false);
+                Init(Panel, Script);
+                _Panel.gameObject.SetActive(true);
+                _MenuObjects.gameObject.SetActive(true);
+                _Exit.onClick.AddListener(() => qwe());
+                _Name.text = Script.transform.name;
+            }
+            PrintResourcesInStorage();
+            Debug.Log(_Exit.onClick.GetPersistentEventCount());
+            void qwe()
+            {
+                _MenuObjects.gameObject.SetActive(false);
+                _Panel.gameObject.SetActive(false);
+            }
+        }
+        private void PrintResourcesInStorage()
+        {
+            
+            for (int i = 0; i < _Data.childCount; i++)
+            {
+                _Data.GetChild(i).gameObject.SetActive(false);
             }
             int k = 0;
-            foreach (var Resource in ResourcesCount)
+            foreach (var Resource in _script.ResourcesCount)
             {
                 //Debug.Log(Resource.Key.ToString());
-                if (ResourcesCount.Count > k && k != 0 && ResourcesCount.Count > prefabResource.transform.parent.childCount)
+                if (_script.ResourcesCount.Count > k && k != 0 && _script.ResourcesCount.Count > _Data.childCount)
                 {
-                    var qwee = Instantiate(prefabResource, prefabResource.transform.parent);
+                    var qwee = Instantiate(_DataPref, _Data);
                 }
                 
-                var prefab = prefabResource.transform.parent.GetChild(k);
+                var prefab = _Data.GetChild(k);
                 prefab.gameObject.SetActive(true);
-                var dataResource = dataResources.Where(p => p.resourcesName == Resource.Key).Select(p => p).First();
+                var dataResource = _script.dataResources.Where(p => p.resourcesName == Resource.Key).Select(p => p).First();
                 prefab.GetChild(0).GetComponent<Image>().sprite = dataResource.sprite; //Icon
                 prefab.GetChild(1).GetComponent<TextMeshProUGUI>().text = dataResource.name; //name
                 prefab.GetChild(2).GetComponent<TextMeshProUGUI>().text = Resource.Value.ToString(); //Count
@@ -55,11 +88,12 @@ namespace Assets.Scripts.Builds
                 k++;
             }
         }
-        private static void OnExitPanelStorage(GameObject PanelStorage)
+        private void OnExitPanelStorage()
         {
-            PanelStorage.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
-            PanelStorage.transform.parent.gameObject.SetActive(false);
-            PanelStorage.SetActive(false);
+            Debug.Log($"{this.GetType()} ");
+            _Exit.onClick.RemoveAllListeners();
+            _MenuObjects.gameObject.SetActive(false);
+            _Panel.gameObject.SetActive(false);
         }
     }
 }

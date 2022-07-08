@@ -8,68 +8,97 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Workers
 {
-    public class UIMenu : MonoBehaviour
+    public class UIMenu : UIBase
     {
-        //private GameObject PanelCart;
-        public static void OnPrintedCurrent(Dictionary<ResourcesName, int> ResourcesCount, List<ResourcesItem.Data> dataResources, Base Script, GameObject PanelCart, Sprite Cart)
+        private Image _Icon;
+        private Transform _Data;
+        private Transform _Improvment; //Frame-BuyImprovements
+        private TextMeshProUGUI _ImprovmentMaxCount;
+        private TextMeshProUGUI _ImprovmentVelocity;
+
+        private void Init(GameObject PanelCart)
         {
-            //PanelCart = PanelCart;
+            if (_Name == null && _Exit == null && _MenuObjects == null)
+            {
+                _MenuObjects = PanelCart.transform.parent;
+                _Name = _MenuObjects.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+                _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
+                
+            }
+            _Panel = PanelCart.transform;
+            _Icon = _Panel.GetChild(0).GetComponentInChildren<Image>();
+            _Data = _Panel.GetChild(1);
+            _ImprovmentMaxCount = _Panel.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
+            _ImprovmentVelocity = _Panel.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>();
+            _Improvment = _Panel.GetChild(2).GetChild(1);
+        }
+        public void OnPrintedCurrent(Base Script, GameObject PanelCart, Sprite Cart)
+        {
+            
             if (PanelCart.transform.parent.gameObject.activeSelf != true)
             {
-                PanelCart.SetActive(true);
-                PanelCart.transform.parent.gameObject.SetActive(true);
-                PrintCurrentPropertiesCart(Script.CountMax, Cart, PanelCart);
-                PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script, PanelCart));
-                PanelCart.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveVelocity(Script, PanelCart));
-                PanelCart.transform.GetChild(2).GetChild(2).GetComponent<Button>().onClick.AddListener(() => OnExitPanelCart(Script, PanelCart));
+                Init(PanelCart);
+                
+                _Panel.gameObject.SetActive(true);
+                _MenuObjects.gameObject.SetActive(true);
+                _Name.text = Script.transform.name;
+                _Icon.sprite = Cart;
+                _Improvment.GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script));
+                _Improvment.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveVelocity(Script));
+                _Exit.onClick.AddListener(() => OnExitPanelCart(Script));
+                Debug.Log($"{this.GetType()} "  + _Exit.onClick.GetPersistentEventCount());
             }
-            PrintCurrentResourcesInCart(ResourcesCount, dataResources, PanelCart);
+            PrintCurrentResourcesInCart(Script);
+            PrintCurrentPropertiesCart(Script);
+            Debug.Log(_Exit.onClick.GetPersistentEventCount());
         }
-        private static void PrintCurrentPropertiesCart(int CountMax, Sprite Cart, GameObject PanelCart)
+        private void PrintCurrentPropertiesCart(Base Script)
         {
-            PanelCart.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Cart; //ObjectCurrent
-            PanelCart.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = CountMax.ToString(); //maxCount
-            PanelCart.transform.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = (10).ToString(); //velocity
+            _ImprovmentMaxCount.text = Script.CountMax.ToString();
+            _ImprovmentVelocity.text = Script.timeMove.ToString(); 
         }
-        private static void PrintCurrentResourcesInCart(Dictionary<ResourcesName, int> ResourcesCount, List<ResourcesItem.Data> dataResources, GameObject PanelCart)
+        private void PrintCurrentResourcesInCart(Base Script)
         {
-            for (int i = 0; i < PanelCart.transform.GetChild(1).childCount; i++)
+            for (int i = 0; i < _Data.childCount; i++)
             {
-                PanelCart.transform.GetChild(1).GetChild(i).gameObject.SetActive(false);
+                _Data.GetChild(i).gameObject.SetActive(false);
             }
             int k = 0;
-            var PrefabResource = PanelCart.transform.GetChild(1).GetChild(0).gameObject;
-            var Prefab = PanelCart.transform.GetChild(1);
-            foreach (var Resource in ResourcesCount)
+            var PrefabResource = _Data.GetChild(0).gameObject;
+            
+            foreach (var Resource in Script.ResourcesCount)
             {
-                if (ResourcesCount.Count > k && k != 0 && ResourcesCount.Count > PanelCart.transform.GetChild(1).childCount)
+                if (Script.ResourcesCount.Count > k && k != 0 && Script.ResourcesCount.Count > _Data.childCount)
                 {
-                    var qwee = Instantiate(PrefabResource, PrefabResource.transform.parent);
+                    var qwee = Instantiate(PrefabResource, _Data);
                 }
-                Prefab.GetChild(k).gameObject.SetActive(true);
-                var dataResource = dataResources.Where(p => p.resourcesName == Resource.Key).Select(p => p);
-                Prefab.GetChild(k).GetChild(0).GetComponent<Image>().sprite = dataResource.First().sprite; //Icon
-                Prefab.GetChild(k).GetChild(1).GetComponent<TextMeshProUGUI>().text = Resource.Value.ToString(); //Count
+                var CurretData = _Data.GetChild(k);
+                CurretData.gameObject.SetActive(true);
+                var dataResource = Script.dataResources.Where(p => p.resourcesName == Resource.Key).Select(p => p);
+                CurretData.GetChild(0).GetComponent<Image>().sprite = dataResource.First().sprite; //Icon
+                CurretData.GetChild(1).GetComponent<TextMeshProUGUI>().text = Resource.Value.ToString(); //Count
                 k++;
             }
         }
-        private static void OnExitPanelCart(Base Script, GameObject PanelCart)
+        private void OnExitPanelCart(Base Script)
         {
+            Debug.Log($"{this.GetType()} ");
             Script.OnUnSelictionCurrentCart?.Invoke();
-            PanelCart.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
-            PanelCart.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-            PanelCart.transform.parent.gameObject.SetActive(false);
-            PanelCart.SetActive(false);
+            _Improvment.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
+            _Improvment.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+            _Exit.onClick.RemoveAllListeners();
+            _MenuObjects.gameObject.SetActive(false);
+            _Panel.gameObject.SetActive(false);
         }
-        private static void OnButtonImproveCountMax(Base Script, GameObject PanelCart)
+        private void OnButtonImproveCountMax(Base Script)
         {
             Script.OnIncriseCountMax?.Invoke();
-            PanelCart.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = (Script.CountMax).ToString(); //maxCount
+            _ImprovmentMaxCount.text = (Script.CountMax).ToString();
         }
-        private static void OnButtonImproveVelocity(Base Script, GameObject PanelCart)
+        private void OnButtonImproveVelocity(Base Script)
         {
             Script.OnIncriseVelocity?.Invoke();
-            PanelCart.transform.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = (Script.timeMove).ToString(); //Velocity
+            _ImprovmentVelocity.text = (Script.timeMove).ToString();
         }
     }
 }

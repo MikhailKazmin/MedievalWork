@@ -16,6 +16,7 @@ namespace Assets.Scripts.Builds
         public delegate void Del();
         public Del OnIncriseCountPerSecond;
         public Del OnUnSelictionCurrentBuild;
+        protected UIMenuBuilds uIMenu = new UIMenuBuilds();
 
         protected override void Awake()
         {
@@ -49,15 +50,15 @@ namespace Assets.Scripts.Builds
                     test.Add(item.Key, IncreaseCount(item.Key, CountCreate));
                 }
                 ResourcesCount = test;
+                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
+                {
+                    ButtonClick.onClick?.Invoke();
+                }
             }
         }
 
         public override int IncreaseCount(ResourcesName resourcesName, int Count)
         {
-            if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
-            {
-                ButtonClick.onClick?.Invoke();
-            }
             return ResourcesCount[resourcesName] + Count;
         }
 
@@ -89,7 +90,7 @@ namespace Assets.Scripts.Builds
         public override void OnClick()
         {
             isCurrentBuildSelection = true;
-            UIMenuBuilds.OnPrintedCurrent(PanelBuilds, ResourcesCount, dataResources, this);
+            uIMenu.OnPrintedCurrent(PanelBuilds, this);
         }
         public ResourcesName[] GetResoursesName()
         {

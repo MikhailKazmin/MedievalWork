@@ -10,7 +10,7 @@ namespace Assets.Scripts.Builds
         private static Storage Instanse = null;
         [SerializeField] private GameObject PanelStorage;
         public static Storage GetInstanse() => Instanse;
-
+        private UIMenuStorage uIMenu = new UIMenuStorage();
         protected override void Awake()
         {
             base.Awake();
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Builds
             }
             if (PanelStorage.transform.parent.gameObject.activeSelf == true)
             {
-                ButtonClick.onClick?.Invoke();
+                //ButtonClick.onClick?.Invoke();
             }
             return Count;
             
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Builds
         public override void OnClick()
         {
             //base.OnClick();
-            UIMenuStorage.OnPrintedCurrent(PanelStorage, ResourcesCount, dataResources);
+            uIMenu.OnPrintedCurrent(PanelStorage, this);
         }    
 
     }

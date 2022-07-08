@@ -24,6 +24,7 @@ namespace Assets.Scripts.Builds
             for (int i = 0; i < 5; i++)
             {
                 var obj = Instantiate(MineObj, transform.GetChild(((int)TypeBuilds.Mines)));
+                obj.name = $"{TypeBuilds.Mines}_{i}";
                 obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(Random.Range(-450f,450f), Random.Range(-1100f, 1100f));
                 MinesList.Add(obj);
 

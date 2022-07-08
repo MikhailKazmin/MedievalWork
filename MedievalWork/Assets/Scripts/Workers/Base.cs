@@ -23,13 +23,14 @@ namespace Assets.Scripts.Workers
         private float time = 0.01f;
         private Animator animator;
         private static GameObject ResourcesGroup;
-        private List<ResourcesItem.Data> dataResources = new List<ResourcesItem.Data>();
+        public List<ResourcesItem.Data> dataResources { get; private set; } = new List<ResourcesItem.Data>();
         private Button ButtonClick;
         public delegate void Del();
         public Del OnIncriseCountMax;
         public Del OnUnSelictionCurrentCart;
         public Del OnIncriseVelocity;
         private bool isCurrentCartSelection = false;
+        private UIMenu uIMenu = new UIMenu();
 
         public Dictionary<ResourcesName, int> ResourcesCount{ get;  private set;}
         public int CountMax { get; private set; } = 5;
@@ -120,7 +121,7 @@ namespace Assets.Scripts.Workers
         {
             //Debug.Log("Click");
             isCurrentCartSelection = true;
-            UIMenu.OnPrintedCurrent(ResourcesCount, dataResources, this, PanelCart, transform.GetComponent<Image>().sprite);
+            uIMenu.OnPrintedCurrent(this, PanelCart, transform.GetComponent<Image>().sprite);
         }
         public int IncreaseCount(ResourcesName resourcesName, int Count)
         {

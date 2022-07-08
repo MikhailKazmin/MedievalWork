@@ -21,9 +21,11 @@ namespace Assets.Scripts.Workers
             if (Instanse == null) Instanse = this;
             else if (Instanse == this) Destroy(gameObject);
             creatorBuilds = Builds.Creator.GetInstanse();
-            for (int i = 0; i < 5; i++)
+
+            for (int i = 0; i < creatorBuilds.MinesList.Count; i++)
             {
                 var obj = Instantiate(WorkerObj, transform);
+                obj.name = $"Worker_{i} Is {creatorBuilds.MinesList[i].name}";
                 obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
                 obj.GetComponent<Base>().Init(PanelCart, creatorBuilds.MinesList[i].GetComponent<Builds.Base>() as Builds.Mining);
                 WorkersList.Add(obj);
