@@ -115,7 +115,7 @@ namespace Assets.Scripts.Workers
         }
         public void PrintDeliveryResources()
         {
-            if (ResourcesCount.Count != 0) Instantiate(ResourcesGroup, transform.parent).GetComponent<Delivery>().Init(ResourcesCount, dataResources, Target);
+            if (ResourcesCount.Count != 0) Instantiate(ResourcesGroup, transform.parent.parent.GetChild(3)).GetComponent<Delivery>().Init(ResourcesCount, dataResources, Target);
         }
         public void OnClick()
         {

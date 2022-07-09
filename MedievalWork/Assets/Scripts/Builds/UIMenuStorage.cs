@@ -54,6 +54,9 @@ namespace Assets.Scripts.Builds
                 _Exit.onClick.AddListener(() => OnExitPanelStorage(Script as Storage));
                 _Name.text = Script.transform.name;
             }
+            Debug.Log("Storage");
+            _Next.gameObject.SetActive(false);
+            _Previous.gameObject.SetActive(false);
             PrintResourcesInStorage(Script as Storage);
         }
         private void PrintResourcesInStorage(Storage _script)
@@ -85,6 +88,7 @@ namespace Assets.Scripts.Builds
         private void OnExitPanelStorage(Storage _script)
         {
             Debug.Log($"{this.GetType()} ");
+            _script.OnUnSeliction?.Invoke();
             _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);

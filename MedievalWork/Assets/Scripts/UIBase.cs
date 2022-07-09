@@ -14,6 +14,8 @@ namespace Assets.Scripts
         protected static Transform _MenuObjects;
         protected static TextMeshProUGUI _Name;
         protected static Button _Exit;
+        protected static Button _Next;
+        protected static Button _Previous;
         protected Transform _Panel;
 
     }

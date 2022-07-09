@@ -7,7 +7,6 @@ namespace Assets.Scripts.Builds
 {
     public class UIMenuBuilds : UIBase
     {
-        //private Mining _script;
         private Image _Icon;
 
         private Transform _Data;
@@ -27,14 +26,15 @@ namespace Assets.Scripts.Builds
 
         private void Init(GameObject PanelBuilds, Mining Script)
         {
-            if (_Name == null && _Exit == null && _MenuObjects == null)
+            if (_Name == null && _Exit == null && _MenuObjects == null && _Previous == null && _Next == null)
             {
                 _MenuObjects = PanelBuilds.transform.parent;
                 _Name = _MenuObjects.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
                 _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
+                _Previous = _MenuObjects.GetChild(1).GetChild(2).GetComponent<Button>();
+                _Next = _MenuObjects.GetChild(1).GetChild(1).GetComponent<Button>();
             }
 
-            //_script = Script as Mining;
             _Panel = PanelBuilds.transform;
             _Icon = _Panel.GetChild(0).GetComponentInChildren<Image>();
 
@@ -62,18 +62,37 @@ namespace Assets.Scripts.Builds
                 _MenuObjects.gameObject.SetActive(true);
                 _Icon.sprite = Script.gameObject.GetComponent<Image>().sprite;
                 _Exit.onClick.AddListener(() => OnExitPanel(Script as Mining));
-
+                _Previous.onClick.AddListener(() => _PreviousBuild(Script as Mining));
+                _Next.onClick.AddListener(() => _NextBuild(Script as Mining));
                 _Name.text = Script.transform.name;
                 _ImprovmentPrefButton.onClick.AddListener(() => OnButtonImproveCountMax(Script as Mining));
                 PrintStatsImprovement(Script as Mining);
             }
             PrintResourcesInBuild(Script as Mining);
+            _Next.gameObject.SetActive(true);
+            _Previous.gameObject.SetActive(true);
+        }
 
+        private void _PreviousBuild(Mining _script)
+        {
+            _Exit.onClick.Invoke();
+            var NumberCurrentBuild = _script.transform.GetSiblingIndex();
+            if (NumberCurrentBuild > 0) _script.transform.parent.GetChild(--NumberCurrentBuild).GetComponent<Button>().onClick.Invoke();
+            else _script.transform.parent.GetChild(_script.transform.parent.childCount-1).GetComponent<Button>().onClick.Invoke();
+        }
+        private void _NextBuild(Mining _script)
+        {
+            _Exit.onClick.Invoke();
+            var NumberCurrentBuild = _script.transform.GetSiblingIndex();
+            if (NumberCurrentBuild < _script.transform.parent.childCount-1) _script.transform.parent.GetChild(++NumberCurrentBuild).GetComponent<Button>().onClick.Invoke();
+            else _script.transform.parent.GetChild(0).GetComponent<Button>().onClick.Invoke();
         }
         private void OnExitPanel(Mining _script)
         {
             _script.OnUnSeliction?.Invoke();
             _ImprovmentPref.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+            _Previous.onClick.RemoveAllListeners();
+            _Next.onClick.RemoveAllListeners();
             _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);

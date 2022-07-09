@@ -18,15 +18,16 @@ namespace Assets.Scripts.Workers
 
         private void Init(GameObject PanelCart)
         {
-            if (_Name == null && _Exit == null && _MenuObjects == null)
+            if (_Name == null && _Exit == null && _MenuObjects == null && _Previous == null && _Next == null)
             {
                 _MenuObjects = PanelCart.transform.parent;
                 _Name = _MenuObjects.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
                 _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
-                
+                _Previous = _MenuObjects.GetChild(1).GetChild(2).GetComponent<Button>();
+                _Next = _MenuObjects.GetChild(1).GetChild(1).GetComponent<Button>();
             }
             _Panel = PanelCart.transform;
-            _Icon = _Panel.GetChild(0).GetComponentInChildren<Image>();
+            _Icon = _Panel.GetChild(0).GetChild(0).GetComponentInChildren<Image>();
             _Data = _Panel.GetChild(1);
             _ImprovmentMaxCount = _Panel.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
             _ImprovmentVelocity = _Panel.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>();
@@ -42,15 +43,32 @@ namespace Assets.Scripts.Workers
                 _Panel.gameObject.SetActive(true);
                 _MenuObjects.gameObject.SetActive(true);
                 _Name.text = Script.transform.name;
-                _Icon.sprite = Cart;
+                //_Icon.sprite = Cart;
                 _Improvment.GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script));
                 _Improvment.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveVelocity(Script));
                 _Exit.onClick.AddListener(() => OnExitPanelCart(Script));
-                //Debug.Log($"{this.GetType()} "  + _Exit.onClick.GetPersistentEventCount());
+                _Previous.onClick.AddListener(() => _PreviousWorker(Script));
+                _Next.onClick.AddListener(() => _NextWorker(Script));
             }
             PrintCurrentResourcesInCart(Script);
             PrintCurrentPropertiesCart(Script);
-            //Debug.Log(_Exit.onClick.GetPersistentEventCount());
+            _Next.gameObject.SetActive(true);
+            _Previous.gameObject.SetActive(true);
+        }
+
+        private void _PreviousWorker(Base _script)
+        {
+            _Exit.onClick.Invoke();
+            var NumberCurrentBuild = _script.transform.GetSiblingIndex();
+            if (NumberCurrentBuild > 0) _script.transform.parent.GetChild(--NumberCurrentBuild).GetComponent<Button>().onClick.Invoke();
+            else _script.transform.parent.GetChild(_script.transform.parent.childCount - 1).GetComponent<Button>().onClick.Invoke();
+        }
+        private void _NextWorker(Base _script)
+        {
+            _Exit.onClick.Invoke();
+            var NumberCurrentBuild = _script.transform.GetSiblingIndex();
+            if (NumberCurrentBuild < _script.transform.parent.childCount - 1) _script.transform.parent.GetChild(++NumberCurrentBuild).GetComponent<Button>().onClick.Invoke();
+            else _script.transform.parent.GetChild(0).GetComponent<Button>().onClick.Invoke();
         }
         private void PrintCurrentPropertiesCart(Base Script)
         {
@@ -86,6 +104,8 @@ namespace Assets.Scripts.Workers
             Script.OnUnSelictionCurrentCart?.Invoke();
             _Improvment.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
             _Improvment.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+            _Previous.onClick.RemoveAllListeners();
+            _Next.onClick.RemoveAllListeners();
             _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);
