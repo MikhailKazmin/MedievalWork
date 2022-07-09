@@ -8,6 +8,7 @@ namespace Assets.Scripts.Builds
     public class UIMenuBuilds : UIBase
     {
         private Image _Icon;
+        private Button _OnClickToAdd;
 
         private Transform _Data;
         private Transform _DataPref;
@@ -17,12 +18,19 @@ namespace Assets.Scripts.Builds
         private TextMeshProUGUI _CountDataPref;
 
         private Transform _Improvments; 
-        private Transform _ImprovmentPref;
-        private Transform _ImprovmentPrefStats;
-        private TextMeshProUGUI _ImprovmentPrefStatsName;
-        private TextMeshProUGUI _ImprovmentPrefStatsLVL;
-        private TextMeshProUGUI _ImprovmentPrefStatsCount;
-        private Button _ImprovmentPrefButton;
+        private Transform _ImprovmentPrefCountCreateBuild;
+        private Transform _ImprovmentPrefStatsCountCreateBuild;
+        private TextMeshProUGUI _ImprovmentPrefStatsNameCountCreateBuild;
+        private TextMeshProUGUI _ImprovmentPrefStatsLVLCountCreateBuild;
+        private TextMeshProUGUI _ImprovmentPrefStatsCountCreateBuildCount;
+        private Button _ImprovmentPrefButtonCountCreateBuild;
+
+        private Transform _ImprovmentPrefOnClick;
+        private Transform _ImprovmentPrefStatsOnClick;
+        private TextMeshProUGUI _ImprovmentPrefStatsNameOnClick;
+        private TextMeshProUGUI _ImprovmentPrefStatsLVLOnClick;
+        private TextMeshProUGUI _ImprovmentPrefStatsCountOnClick;
+        private Button _ImprovmentPrefButtonOnClick;
 
         private void Init(GameObject PanelBuilds, Mining Script)
         {
@@ -37,7 +45,7 @@ namespace Assets.Scripts.Builds
 
             _Panel = PanelBuilds.transform;
             _Icon = _Panel.GetChild(0).GetComponentInChildren<Image>();
-
+            _OnClickToAdd = _Icon.transform.GetChild(0).GetComponent<Button>();
             _Data = _Panel.GetChild(1);
             _DataPref = _Data.GetChild(0);
             _IconDataPref = _DataPref.GetChild(0).GetComponent<Image>();
@@ -46,12 +54,19 @@ namespace Assets.Scripts.Builds
             _CountDataPref = _DataPref.GetChild(3).GetComponent<TextMeshProUGUI>();
 
             _Improvments = _Panel.GetChild(2);
-            _ImprovmentPref = _Improvments.GetChild(0);
-            _ImprovmentPrefStats = _ImprovmentPref.GetChild(1);
-            _ImprovmentPrefStatsName = _ImprovmentPrefStats.GetChild(0).GetComponent<TextMeshProUGUI>();
-            _ImprovmentPrefStatsLVL = _ImprovmentPrefStats.GetChild(1).GetComponent<TextMeshProUGUI>();
-            _ImprovmentPrefStatsCount = _ImprovmentPrefStats.GetChild(2).GetComponent<TextMeshProUGUI>();
-            _ImprovmentPrefButton = _ImprovmentPref.GetChild(2).GetComponent<Button>();
+            _ImprovmentPrefCountCreateBuild = _Improvments.GetChild(0);
+            _ImprovmentPrefStatsCountCreateBuild = _ImprovmentPrefCountCreateBuild.GetChild(1);
+            _ImprovmentPrefStatsNameCountCreateBuild = _ImprovmentPrefStatsCountCreateBuild.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsLVLCountCreateBuild = _ImprovmentPrefStatsCountCreateBuild.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsCountCreateBuildCount = _ImprovmentPrefStatsCountCreateBuild.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonCountCreateBuild = _ImprovmentPrefCountCreateBuild.GetChild(2).GetComponent<Button>();
+
+            _ImprovmentPrefOnClick = _Improvments.GetChild(1);
+            _ImprovmentPrefStatsOnClick = _ImprovmentPrefOnClick.GetChild(1);
+            _ImprovmentPrefStatsNameOnClick = _ImprovmentPrefStatsOnClick.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsLVLOnClick = _ImprovmentPrefStatsOnClick.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsCountOnClick = _ImprovmentPrefStatsOnClick.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonOnClick = _ImprovmentPrefOnClick.GetChild(2).GetComponent<Button>();
         }
         public void OnPrintedCurrent(GameObject Panel, Base Script)
         {
@@ -64,15 +79,22 @@ namespace Assets.Scripts.Builds
                 _Exit.onClick.AddListener(() => OnExitPanel(Script as Mining));
                 _Previous.onClick.AddListener(() => _PreviousBuild(Script as Mining));
                 _Next.onClick.AddListener(() => _NextBuild(Script as Mining));
+                _OnClickToAdd.onClick.AddListener(() => AddResourcesCountFromClick(Script as Mining));
                 _Name.text = Script.transform.name;
-                _ImprovmentPrefButton.onClick.AddListener(() => OnButtonImproveCountMax(Script as Mining));
-                PrintStatsImprovement(Script as Mining);
+                _ImprovmentPrefButtonCountCreateBuild.onClick.AddListener(() => OnButtonImproveCountMax(Script as Mining));
+                _ImprovmentPrefButtonOnClick.onClick.AddListener(() => OnButtonImproveCountFromClick(Script as Mining));
+                PrintStatsImprovementCountCreate(Script as Mining);
+                PrintStatsImprovementCountFromClick(Script as Mining);
             }
             PrintResourcesInBuild(Script as Mining);
             _Next.gameObject.SetActive(true);
             _Previous.gameObject.SetActive(true);
         }
-
+        private void AddResourcesCountFromClick(Mining Script)
+        {
+            Script.IncreaseCountFromClick(Script.CountCreateFromOnClick);
+            PrintResourcesInBuild(Script);
+        }
         private void _PreviousBuild(Mining _script)
         {
             _Exit.onClick.Invoke();
@@ -90,10 +112,12 @@ namespace Assets.Scripts.Builds
         private void OnExitPanel(Mining _script)
         {
             _script.OnUnSeliction?.Invoke();
-            _ImprovmentPref.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+            _ImprovmentPrefButtonCountCreateBuild.onClick.RemoveAllListeners();
+            _ImprovmentPrefButtonOnClick.onClick.RemoveAllListeners();
             _Previous.onClick.RemoveAllListeners();
             _Next.onClick.RemoveAllListeners();
             _Exit.onClick.RemoveAllListeners();
+            _OnClickToAdd.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);
         }
@@ -118,18 +142,30 @@ namespace Assets.Scripts.Builds
                 k++;
             }
         }
-        private void PrintStatsImprovement(Mining _script)
+        private void PrintStatsImprovementCountCreate(Mining _script)
         {
             //_IconData.sprite = dataImprovement;
-            _ImprovmentPrefStatsName.text = "Скорость добычи";
-            _ImprovmentPrefStatsLVL.text = _script.Level.ToString() + " LVL";
-            _ImprovmentPrefStatsCount.text = _script.CountCreate.ToString() + " per s";
+            _ImprovmentPrefStatsNameCountCreateBuild.text = "Скорость добычи";
+            _ImprovmentPrefStatsLVLCountCreateBuild.text = _script.LevelCountCreate.ToString() + " LVL";
+            _ImprovmentPrefStatsCountCreateBuildCount.text = _script.CountCreate.ToString() + " в секунду";
+        }
+
+        private void PrintStatsImprovementCountFromClick(Mining _script)
+        {
+            //_IconData.sprite = dataImprovement;
+            _ImprovmentPrefStatsNameOnClick.text = "Количество за клик";
+            _ImprovmentPrefStatsLVLOnClick.text = _script.LevelCountCreateFromOnClick.ToString() + " LVL";
+            _ImprovmentPrefStatsCountOnClick.text = _script.CountCreateFromOnClick.ToString() + " за клик";
         }
         private void OnButtonImproveCountMax(Mining _script)
         {
             _script.OnIncriseCountPerSecond?.Invoke();
-            PrintStatsImprovement(_script);
+            PrintStatsImprovementCountCreate(_script);
         }
-
+        private void OnButtonImproveCountFromClick(Mining _script)
+        {
+            _script.OnIncriseCountFromOnClick?.Invoke();
+            PrintStatsImprovementCountFromClick(_script);
+        }
     }
 }

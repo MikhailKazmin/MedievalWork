@@ -10,12 +10,14 @@ namespace Assets.Scripts.Builds
     {
         private float TimeCreate = 1f;
         public int CountCreate { get; protected set; } = 1;
-        public int Level { get; protected set; } = 1;
+        public int CountCreateFromOnClick { get; protected set; } = 1;
+        public int LevelCountCreate { get; protected set; } = 1;
+        public int LevelCountCreateFromOnClick { get; protected set; } = 1;
         private static GameObject PanelBuilds;
         
         public delegate void Del();
         public Del OnIncriseCountPerSecond;
-
+        public Del OnIncriseCountFromOnClick;
         protected UIMenuBuilds uIMenu = new UIMenuBuilds();
 
         protected override void Awake()
@@ -24,12 +26,21 @@ namespace Assets.Scripts.Builds
             StartCoroutine(MiningResources());
 
             OnIncriseCountPerSecond += ImprovementTimeCreate;
+            OnIncriseCountFromOnClick += ImprovementFromOnClick;
         }
-
+        private void ImprovementFromOnClick()
+        {
+            CountCreateFromOnClick += 3;
+            LevelCountCreateFromOnClick++;
+            if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
+            {
+                ButtonClick.onClick?.Invoke();
+            }
+        }
         private void ImprovementTimeCreate()
         {
             CountCreate+=10;
-            Level++;
+            LevelCountCreate++;
             if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
             {
                 ButtonClick.onClick?.Invoke();
@@ -44,12 +55,7 @@ namespace Assets.Scripts.Builds
             while (true)
             {
                 yield return new WaitForSeconds(TimeCreate);
-                var test = new Dictionary<ResourcesName, int>();
-                foreach (var item in ResourcesCount)
-                {
-                    test.Add(item.Key, IncreaseCount(item.Key, CountCreate));
-                }
-                ResourcesCount = test;
+                IncreaseCountFromClick(CountCreate);
                 if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
                 {
                     ButtonClick.onClick?.Invoke();
@@ -61,7 +67,15 @@ namespace Assets.Scripts.Builds
         {
             return ResourcesCount[resourcesName] + Count;
         }
-
+        public void IncreaseCountFromClick(int Count)
+        {
+            var test = new Dictionary<ResourcesName, int>();
+            foreach (var item in ResourcesCount)
+            {
+                test.Add(item.Key, IncreaseCount(item.Key, Count));
+            }
+            ResourcesCount = test;
+        }
         public override int ReduceCount(ResourcesName resourcesName, int Count)
         {
             if (ResourcesCount[resourcesName] >= Count)
