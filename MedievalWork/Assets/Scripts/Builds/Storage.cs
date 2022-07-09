@@ -35,9 +35,9 @@ namespace Assets.Scripts.Builds
             {
                 ResourcesCount.Add(resourcesName,Count);
             }
-            if (PanelStorage.transform.parent.gameObject.activeSelf == true)
+            if (PanelStorage.transform.parent.gameObject.activeSelf == true && isBuildSelection)
             {
-                //ButtonClick.onClick?.Invoke();
+                ButtonClick.onClick?.Invoke();
             }
             return Count;
             
@@ -50,7 +50,8 @@ namespace Assets.Scripts.Builds
 
         public override void OnClick()
         {
-            //base.OnClick();
+            base.OnClick();
+
             uIMenu.OnPrintedCurrent(PanelStorage, this);
         }    
 

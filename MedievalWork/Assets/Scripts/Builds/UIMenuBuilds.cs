@@ -7,7 +7,7 @@ namespace Assets.Scripts.Builds
 {
     public class UIMenuBuilds : UIBase
     {
-        private Mining _script;
+        //private Mining _script;
         private Image _Icon;
 
         private Transform _Data;
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Builds
         private TextMeshProUGUI _ImprovmentPrefStatsCount;
         private Button _ImprovmentPrefButton;
 
-        private void Init(GameObject PanelBuilds, Base Script)
+        private void Init(GameObject PanelBuilds, Mining Script)
         {
             if (_Name == null && _Exit == null && _MenuObjects == null)
             {
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Builds
                 _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
             }
 
-            _script = Script as Mining;
+            //_script = Script as Mining;
             _Panel = PanelBuilds.transform;
             _Icon = _Panel.GetChild(0).GetComponentInChildren<Image>();
 
@@ -57,31 +57,28 @@ namespace Assets.Scripts.Builds
         {
             if (Panel.transform.parent.gameObject.activeSelf != true)
             {
-                Init(Panel, Script);
+                Init(Panel, Script as Mining);
                 _Panel.gameObject.SetActive(true);
                 _MenuObjects.gameObject.SetActive(true);
-                _Icon.sprite = _script.gameObject.GetComponent<Image>().sprite;
-                _Exit.onClick.AddListener(OnExitPanel);
+                _Icon.sprite = Script.gameObject.GetComponent<Image>().sprite;
+                _Exit.onClick.AddListener(() => OnExitPanel(Script as Mining));
 
                 _Name.text = Script.transform.name;
-                _ImprovmentPrefButton.onClick.AddListener(() => OnButtonImproveCountMax());
-                PrintStatsImprovement();
-                Debug.Log(_Exit.onClick.GetPersistentEventCount());
-                
+                _ImprovmentPrefButton.onClick.AddListener(() => OnButtonImproveCountMax(Script as Mining));
+                PrintStatsImprovement(Script as Mining);
             }
-            Debug.Log($"{Script.name}");
-            PrintResourcesInBuild();
+            PrintResourcesInBuild(Script as Mining);
 
         }
-        private void OnExitPanel()
+        private void OnExitPanel(Mining _script)
         {
-            _script.OnUnSelictionCurrentBuild?.Invoke();
-            //_ImprovmentPref.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
-            //_Exit.onClick.RemoveAllListeners();
+            _script.OnUnSeliction?.Invoke();
+            _ImprovmentPref.GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+            _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);
         }
-        private void PrintResourcesInBuild()
+        private void PrintResourcesInBuild(Mining _script)
         {
             for (int i = 0; i < _Data.childCount; i++)
             {
@@ -102,17 +99,17 @@ namespace Assets.Scripts.Builds
                 k++;
             }
         }
-        private void PrintStatsImprovement()
+        private void PrintStatsImprovement(Mining _script)
         {
             //_IconData.sprite = dataImprovement;
             _ImprovmentPrefStatsName.text = "Скорость добычи";
             _ImprovmentPrefStatsLVL.text = _script.Level.ToString() + " LVL";
             _ImprovmentPrefStatsCount.text = _script.CountCreate.ToString() + " per s";
         }
-        private void OnButtonImproveCountMax()
+        private void OnButtonImproveCountMax(Mining _script)
         {
             _script.OnIncriseCountPerSecond?.Invoke();
-            PrintStatsImprovement();
+            PrintStatsImprovement(_script);
         }
 
     }

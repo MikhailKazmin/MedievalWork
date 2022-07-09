@@ -10,7 +10,7 @@ namespace Assets.Scripts.Builds
 {
     public class UIMenuStorage : UIBase
     {
-        private Storage _script;
+        //private Storage _script;
 
         private Transform _Data;
         private Transform _DataPref;
@@ -21,7 +21,7 @@ namespace Assets.Scripts.Builds
 
         private Transform _TypeResources;
         private Transform _TypeResourcesPref;
-        private void Init(GameObject Panel, Base Script)
+        private void Init(GameObject Panel)
         {
             if (_Name == null && _Exit == null && _MenuObjects == null)
             {
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Builds
                 _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
             }
 
-            _script = Script as Storage;
+            //_script = Script as Storage;
             _Panel = Panel.transform;
 
             _Data = _Panel.GetChild(0).GetChild(1);
@@ -48,21 +48,15 @@ namespace Assets.Scripts.Builds
         {
             if (Panel.transform.parent.gameObject.activeSelf != true)
             {
-                Init(Panel, Script);
+                Init(Panel);
                 _Panel.gameObject.SetActive(true);
                 _MenuObjects.gameObject.SetActive(true);
-                _Exit.onClick.AddListener(() => qwe());
+                _Exit.onClick.AddListener(() => OnExitPanelStorage(Script as Storage));
                 _Name.text = Script.transform.name;
             }
-            PrintResourcesInStorage();
-            Debug.Log(_Exit.onClick.GetPersistentEventCount());
-            void qwe()
-            {
-                _MenuObjects.gameObject.SetActive(false);
-                _Panel.gameObject.SetActive(false);
-            }
+            PrintResourcesInStorage(Script as Storage);
         }
-        private void PrintResourcesInStorage()
+        private void PrintResourcesInStorage(Storage _script)
         {
             
             for (int i = 0; i < _Data.childCount; i++)
@@ -88,7 +82,7 @@ namespace Assets.Scripts.Builds
                 k++;
             }
         }
-        private void OnExitPanelStorage()
+        private void OnExitPanelStorage(Storage _script)
         {
             Debug.Log($"{this.GetType()} ");
             _Exit.onClick.RemoveAllListeners();

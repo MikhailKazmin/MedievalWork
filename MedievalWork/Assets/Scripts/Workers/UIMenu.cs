@@ -46,11 +46,11 @@ namespace Assets.Scripts.Workers
                 _Improvment.GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script));
                 _Improvment.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveVelocity(Script));
                 _Exit.onClick.AddListener(() => OnExitPanelCart(Script));
-                Debug.Log($"{this.GetType()} "  + _Exit.onClick.GetPersistentEventCount());
+                //Debug.Log($"{this.GetType()} "  + _Exit.onClick.GetPersistentEventCount());
             }
             PrintCurrentResourcesInCart(Script);
             PrintCurrentPropertiesCart(Script);
-            Debug.Log(_Exit.onClick.GetPersistentEventCount());
+            //Debug.Log(_Exit.onClick.GetPersistentEventCount());
         }
         private void PrintCurrentPropertiesCart(Base Script)
         {

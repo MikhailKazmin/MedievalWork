@@ -12,17 +12,17 @@ namespace Assets.Scripts.Builds
         public int CountCreate { get; protected set; } = 1;
         public int Level { get; protected set; } = 1;
         private static GameObject PanelBuilds;
-        private bool isCurrentBuildSelection = false;
+        
         public delegate void Del();
         public Del OnIncriseCountPerSecond;
-        public Del OnUnSelictionCurrentBuild;
+
         protected UIMenuBuilds uIMenu = new UIMenuBuilds();
 
         protected override void Awake()
         {
             base.Awake();
             StartCoroutine(MiningResources());
-            OnUnSelictionCurrentBuild += () => isCurrentBuildSelection = false;
+
             OnIncriseCountPerSecond += ImprovementTimeCreate;
         }
 
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Builds
         {
             CountCreate+=10;
             Level++;
-            if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
+            if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
             {
                 ButtonClick.onClick?.Invoke();
             }
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Builds
                     test.Add(item.Key, IncreaseCount(item.Key, CountCreate));
                 }
                 ResourcesCount = test;
-                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
+                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
                 {
                     ButtonClick.onClick?.Invoke();
                 }
@@ -67,7 +67,7 @@ namespace Assets.Scripts.Builds
             if (ResourcesCount[resourcesName] >= Count)
             {
                 ResourcesCount[resourcesName] -= Count;
-                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
+                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
                 {
                     ButtonClick.onClick?.Invoke();
                 }
@@ -77,7 +77,7 @@ namespace Assets.Scripts.Builds
             {
                 var CurrentCount = ResourcesCount[resourcesName];
                 ResourcesCount[resourcesName] = 0;
-                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isCurrentBuildSelection)
+                if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
                 {
                     ButtonClick.onClick?.Invoke();
                 }
@@ -89,7 +89,8 @@ namespace Assets.Scripts.Builds
         }
         public override void OnClick()
         {
-            isCurrentBuildSelection = true;
+            base.OnClick();
+            //isBuildSelection = true;
             uIMenu.OnPrintedCurrent(PanelBuilds, this);
         }
         public ResourcesName[] GetResoursesName()

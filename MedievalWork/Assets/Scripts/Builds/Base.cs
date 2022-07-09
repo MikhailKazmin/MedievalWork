@@ -10,15 +10,10 @@ namespace Assets.Scripts.Builds
     {
         protected Button ButtonClick;
         [SerializeField] private bool ResourceIsSave = false;
-        protected bool isStorageSelection = false;
+        protected bool isBuildSelection = false;
         public delegate void Del();
-        public Del OnUnSelictionStorage;
+        public Del OnUnSeliction { get; protected set; }
         
-        //public Dictionary<ResourcesName, int> ResourcesCount
-        //{
-        //    get => ResourcesCount;
-        //    protected set => ResourcesCount = value;
-        //}
         public List<Data> dataResources { get; protected set; }
         public Dictionary<ResourcesName, int> ResourcesCount { get; protected set; }
 
@@ -29,7 +24,7 @@ namespace Assets.Scripts.Builds
             Debug.Log($"Awake to {this.GetType()}");
             ResourcesCount = GetResources();
             dataResources = Resources.LoadAll<Data>("Resources").ToList();
-            OnUnSelictionStorage += () => isStorageSelection = false;
+            OnUnSeliction += () => isBuildSelection = false;
         }
 
 
@@ -49,22 +44,22 @@ namespace Assets.Scripts.Builds
         }
         public virtual void OnClick()
         {
-            
-            Debug.Log($"On Click to {this.GetType()}");
-            if (ResourcesCount.Count == 0)
-            {
-                Debug.Log($" Not Resource ");
-            }
-            else
-            {
-                string str = "";
-                foreach (var item in ResourcesCount)
-                {
-                    str += $"Resource[{item.Key}] = {item.Value}\n";
-                }
-                Debug.Log(str);
-            }
-            
+            isBuildSelection = true;
+            //Debug.Log($"On Click to {this.GetType()}");
+            //if (ResourcesCount.Count == 0)
+            //{
+            //    Debug.Log($" Not Resource ");
+            //}
+            //else
+            //{
+            //    string str = "";
+            //    foreach (var item in ResourcesCount)
+            //    {
+            //        str += $"Resource[{item.Key}] = {item.Value}\n";
+            //    }
+            //    Debug.Log(str);
+            //}
+
         }
 
         public abstract int ReduceCount(ResourcesName resourcesName, int Count);
