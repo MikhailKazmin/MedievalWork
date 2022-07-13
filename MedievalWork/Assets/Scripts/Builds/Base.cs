@@ -10,7 +10,7 @@ namespace Assets.Scripts.Builds
     {
         protected Button ButtonClick;
         [SerializeField] private bool ResourceIsSave = false;
-        protected bool isBuildSelection = false;
+        public bool isBuildSelection { get; protected set; } = false;
         public delegate void Del();
         public Del OnUnSeliction { get; protected set; }
         

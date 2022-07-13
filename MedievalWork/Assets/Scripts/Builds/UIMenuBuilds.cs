@@ -24,6 +24,7 @@ namespace Assets.Scripts.Builds
         private TextMeshProUGUI _ImprovmentPrefStatsLVLCountCreateBuild;
         private TextMeshProUGUI _ImprovmentPrefStatsCountCreateBuildCount;
         private Button _ImprovmentPrefButtonCountCreateBuild;
+        private TextMeshProUGUI _ImprovmentPrefButtonCountCreateBuildCost;
 
         private Transform _ImprovmentPrefOnClick;
         private Transform _ImprovmentPrefStatsOnClick;
@@ -31,6 +32,7 @@ namespace Assets.Scripts.Builds
         private TextMeshProUGUI _ImprovmentPrefStatsLVLOnClick;
         private TextMeshProUGUI _ImprovmentPrefStatsCountOnClick;
         private Button _ImprovmentPrefButtonOnClick;
+        private TextMeshProUGUI _ImprovmentPrefButtonOnClickCost;
 
         private void Init(GameObject PanelBuilds, Mining Script)
         {
@@ -60,6 +62,8 @@ namespace Assets.Scripts.Builds
             _ImprovmentPrefStatsLVLCountCreateBuild = _ImprovmentPrefStatsCountCreateBuild.GetChild(1).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefStatsCountCreateBuildCount = _ImprovmentPrefStatsCountCreateBuild.GetChild(2).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefButtonCountCreateBuild = _ImprovmentPrefCountCreateBuild.GetChild(2).GetComponent<Button>();
+            _ImprovmentPrefButtonCountCreateBuildCost = _ImprovmentPrefButtonCountCreateBuild.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonCountCreateBuildCost.text = "1";
 
             _ImprovmentPrefOnClick = _Improvments.GetChild(1);
             _ImprovmentPrefStatsOnClick = _ImprovmentPrefOnClick.GetChild(1);
@@ -67,9 +71,15 @@ namespace Assets.Scripts.Builds
             _ImprovmentPrefStatsLVLOnClick = _ImprovmentPrefStatsOnClick.GetChild(1).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefStatsCountOnClick = _ImprovmentPrefStatsOnClick.GetChild(2).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefButtonOnClick = _ImprovmentPrefOnClick.GetChild(2).GetComponent<Button>();
+            _ImprovmentPrefButtonOnClickCost = _ImprovmentPrefButtonOnClick.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonOnClickCost.text = "1";
         }
         public void OnPrintedCurrent(GameObject Panel, Base Script)
         {
+            if (Script.isBuildSelection)
+            {
+
+            }
             if (Panel.transform.parent.gameObject.activeSelf != true)
             {
                 Init(Panel, Script as Mining);

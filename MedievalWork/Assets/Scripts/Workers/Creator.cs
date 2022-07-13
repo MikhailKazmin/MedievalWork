@@ -22,16 +22,18 @@ namespace Assets.Scripts.Workers
             else if (Instanse == this) Destroy(gameObject);
             creatorBuilds = Builds.Creator.GetInstanse();
 
-            for (int i = 0; i < creatorBuilds.MinesList.Count; i++)
-            {
-                var obj = Instantiate(WorkerObj, transform);
-                obj.name = $"Worker_{i} Is {creatorBuilds.MinesList[i].name}";
-                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-                obj.GetComponent<Base>().Init(PanelCart, creatorBuilds.MinesList[i].GetComponent<Builds.Base>() as Builds.Mining);
-                WorkersList.Add(obj);
 
-            }
+            Buy.OnCreateBuildAndWorker += Worker;
         }
+        public void Worker()
+        {
+            var obj = Instantiate(WorkerObj, transform);
+            obj.name = $"Worker_{WorkersList.Count} Is {creatorBuilds.MinesList[WorkersList.Count].name}";
+            obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            obj.GetComponent<Base>().Init(PanelCart, creatorBuilds.MinesList[WorkersList.Count].GetComponent<Builds.Base>() as Builds.Mining);
+            WorkersList.Add(obj);
+        }
+
     }
 
 }
