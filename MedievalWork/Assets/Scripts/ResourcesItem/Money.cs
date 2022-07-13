@@ -3,9 +3,10 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.Builds;
+using Ell.Builds;
+using Ell.BaseScripts;
 
-namespace Assets.Scripts.ResourcesItem
+namespace Ell.Resources
 {
     public class Money : MonoBehaviour
     {

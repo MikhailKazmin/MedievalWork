@@ -1,12 +1,13 @@
-﻿using Assets.Scripts.ResourcesItem;
+﻿using Ell.Resources;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Ell.Workers;
 
-namespace Assets.Scripts.Workers
+namespace Ell.UI
 {
     public class UIMenu : UIBase
     {

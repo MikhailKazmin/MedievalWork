@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.ResourcesItem;
+using Ell.Resources;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 
-namespace Assets.Scripts.Builds
+using Ell.Builds;
+
+namespace Ell.UI
 {
     public class UIMenuStorage : UIBase
     {
@@ -52,9 +54,8 @@ namespace Assets.Scripts.Builds
             _countSell = _Panel.GetChild(1).GetChild(0).GetComponent<Slider>();
             _countSell.minValue = 1;
             _countSellText = _countSell.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
-            
-        }
 
+        }
         private void PrintSellCount(Storage _script)
         {
             if (_script.ResourcesCount.ContainsKey(_currentResource))
@@ -63,7 +64,6 @@ namespace Assets.Scripts.Builds
                 _countSellText.text = _countSell.value.ToString();
             }
         }
-
         public void OnPrintedCurrent(GameObject Panel, Base Script)
         {
             if (Panel.transform.parent.gameObject.activeSelf != true)
@@ -113,7 +113,7 @@ namespace Assets.Scripts.Builds
             int k = 0;
             foreach (var Resource in _script.ResourcesCount)
             {
-                
+
                 if (_script.ResourcesCount.Count > k &&
                     //k != 0 &&
                     _script.ResourcesCount.Count > _Data.childCount &&
@@ -134,7 +134,7 @@ namespace Assets.Scripts.Builds
                 prefab.GetChild(0).GetComponent<Image>().sprite = dataResource.sprite; //Icon
                 prefab.GetChild(1).GetComponent<TextMeshProUGUI>().text = dataResource.name; //name
                 prefab.GetChild(2).GetComponent<TextMeshProUGUI>().text = Resource.Value.ToString(); //Count
-                prefab.GetChild(3).GetComponent<TextMeshProUGUI>().text = dataResource.Cost.ToString()+"$"; //Cost
+                prefab.GetChild(3).GetComponent<TextMeshProUGUI>().text = dataResource.Cost.ToString() + "$"; //Cost
                 prefab.name = dataResource.name;
                 prefab.gameObject.SetActive(true);
                 //if (_buttonResources.Count < _Data.childCount)
@@ -150,7 +150,7 @@ namespace Assets.Scripts.Builds
         }
         private void OnExitPanelStorage(Storage _script)
         {
-            Debug.Log($"{this.GetType()} ");
+            Debug.Log($"{GetType()} ");
             _script.OnUnSeliction?.Invoke();
             _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
@@ -158,6 +158,72 @@ namespace Assets.Scripts.Builds
             _sell.onClick.RemoveAllListeners();
             _sell.gameObject.SetActive(false);
             _countSell.gameObject.SetActive(false);
+        }
+    }
+
+    class StorageUI
+    {
+        protected static Transform _MenuObjects;
+        protected static TextMeshProUGUI _Name;
+        protected static Button _Exit;
+        protected static Button _Next;
+        protected static Button _Previous;
+        protected Transform _Panel;
+
+
+        private Transform _Data;
+        private Transform _DataPref;
+        private List<Button> _buttonResources = new List<Button>();
+        private Image _IconDataPref;
+        private TextMeshProUGUI _NameDataPref;
+        private TextMeshProUGUI _CostDataPref;
+        private TextMeshProUGUI _CountDataPref;
+
+        private Button _sell;
+        private Slider _countSell;
+        private TextMeshProUGUI _countSellText;
+
+        private Transform _TypeResources;
+        private Transform _TypeResourcesPref;
+
+        private void Init(GameObject Panel)
+        {
+            if (_Name == null && _Exit == null && _MenuObjects == null)
+            {
+                _MenuObjects = Panel.transform.parent;
+                _Name = _MenuObjects.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+                _Exit = _MenuObjects.GetChild(0).GetComponent<Button>();
+                _Previous = _MenuObjects.GetChild(1).GetChild(2).GetComponent<Button>();
+                _Next = _MenuObjects.GetChild(1).GetChild(1).GetComponent<Button>();
+            }
+            _Panel = Panel.transform;
+
+            _Data = _Panel.GetChild(0).GetChild(1);
+            _DataPref = _Data.GetChild(0);
+
+            _IconDataPref = _DataPref.GetChild(0).GetComponent<Image>();
+            _NameDataPref = _DataPref.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _CountDataPref = _DataPref.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _CostDataPref = _DataPref.GetChild(3).GetComponent<TextMeshProUGUI>();
+
+            _TypeResources = _Panel.GetChild(0).GetChild(0);
+            _TypeResourcesPref = _TypeResources.GetChild(0);
+            _sell = _Panel.GetChild(1).GetChild(1).GetComponent<Button>();
+            _countSell = _Panel.GetChild(1).GetChild(0).GetComponent<Slider>();
+            _countSell.minValue = 1;
+            _countSellText = _countSell.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+
+        }
+
+        public abstract class UIBase : MonoBehaviour
+        {
+            protected static Transform _MenuObjects;
+            protected static TextMeshProUGUI _Name;
+            protected static Button _Exit;
+            protected static Button _Next;
+            protected static Button _Previous;
+            protected Transform _Panel;
+
         }
     }
 }

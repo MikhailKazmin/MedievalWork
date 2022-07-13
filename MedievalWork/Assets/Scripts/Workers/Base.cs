@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.ResourcesItem;
-using Assets.Scripts;
+using Ell.Resources;
+using Ell.UI;
 using TMPro;
 using System.Linq;
 
-namespace Assets.Scripts.Workers
+
+namespace Ell.Workers
 {
     public class Base : MonoBehaviour, IWorker
     {
@@ -23,7 +24,7 @@ namespace Assets.Scripts.Workers
         private float time = 0.01f;
         private Animator animator;
         private static GameObject ResourcesGroup;
-        public List<ResourcesItem.Data> dataResources { get; private set; } = new List<ResourcesItem.Data>();
+        public List<Resources.Data> dataResources { get; private set; } = new List<Resources.Data>();
         private Button ButtonClick;
         public delegate void Del();
         public Del OnIncriseCountMax;
@@ -32,7 +33,7 @@ namespace Assets.Scripts.Workers
         private bool isCurrentCartSelection = false;
         private UIMenu uIMenu = new UIMenu();
 
-        public Dictionary<ResourcesName, int> ResourcesCount{ get;  private set;}
+        public Dictionary<ResourcesName, int> ResourcesCount { get; private set; }
         public int CountMax { get; private set; } = 5;
 
 
@@ -47,8 +48,8 @@ namespace Assets.Scripts.Workers
             StorageRect = StorageScripts.GetComponent<RectTransform>();
             Mine = MineScripts.transform.GetComponent<RectTransform>();
             Target = Mine.anchoredPosition;
-            if (ResourcesGroup == null) ResourcesGroup = Resources.Load("DelivaryGroup") as GameObject;
-            dataResources = Resources.LoadAll<ResourcesItem.Data>("Resources").ToList();
+            if (ResourcesGroup == null) ResourcesGroup = UnityEngine.Resources.Load("DelivaryGroup") as GameObject;
+            dataResources = UnityEngine.Resources.LoadAll<Resources.Data>("Resources").ToList();
             ButtonClick = GetComponent<Button>();
             ButtonClick.onClick.AddListener(() => OnClick());
             StartCoroutine(Move());

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.Scripts.ResourcesItem;
 using System.Linq;
+using Ell.Resources;
+using Ell.UI;
 
-namespace Assets.Scripts.Builds
+namespace Ell.Builds
 {
     public class Storage : Base, IStorage
     {
@@ -36,11 +37,11 @@ namespace Assets.Scripts.Builds
             {
                 ResourcesCount.Remove(resourcesName);
             }
-            else if(ResourcesCount[resourcesName] > Count)
+            else if (ResourcesCount[resourcesName] > Count)
             {
                 ResourcesCount[resourcesName] -= Count;
             }
-            
+
             OnClick();
             return 0;
         }
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Builds
         {
             base.OnClick();
             uIMenu.OnPrintedCurrent(PanelStorage, this);
-        }    
+        }
 
     }
 }

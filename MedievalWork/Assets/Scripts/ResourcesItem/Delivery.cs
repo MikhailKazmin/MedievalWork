@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.ResourcesItem
+namespace Ell.Resources
 {
     public class Delivery : MonoBehaviour
     {

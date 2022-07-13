@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using System.Linq;
 using TMPro;
+using Ell.Builds;
 
-namespace Assets.Scripts.Builds
+namespace Ell.UI
 {
     public class UIMenuBuilds : UIBase
     {

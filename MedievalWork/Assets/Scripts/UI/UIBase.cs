@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts
+namespace Ell.UI
 {
     public abstract class UIBase : MonoBehaviour
     {

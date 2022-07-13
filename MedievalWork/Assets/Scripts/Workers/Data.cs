@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.Workers
+namespace Ell.Workers
 {
     public class Data : ScriptableObject
     {

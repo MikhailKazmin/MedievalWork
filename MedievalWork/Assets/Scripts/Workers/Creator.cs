@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.Scripts.ResourcesItem;
+using Ell.Resources;
+using Ell.BaseScripts;
 
-namespace Assets.Scripts.Workers
+namespace Ell.Workers
 {
     public class Creator : MonoBehaviour
     {

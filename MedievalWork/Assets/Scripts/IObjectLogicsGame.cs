@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Assets.Scripts.ResourcesItem;
+using Ell.Resources;
 
-namespace Assets.Scripts
+namespace Ell.BaseScripts
 {
     public interface IObjectLogicsGame
     {

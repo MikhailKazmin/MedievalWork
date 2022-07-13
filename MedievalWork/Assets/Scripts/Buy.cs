@@ -2,9 +2,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Ell.BaseScripts
 {
-    public class Buy 
+    public class Buy
     {
         public static Action OnCreateBuildAndWorker;
         public static Action OnImprovementStats;

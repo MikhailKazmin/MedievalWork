@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Scripts.ResourcesItem
+namespace Ell.Resources
 {
     [CreateAssetMenu(menuName = "Resources", fileName = "New Resource")]
     public class Data : ScriptableObject, IResources

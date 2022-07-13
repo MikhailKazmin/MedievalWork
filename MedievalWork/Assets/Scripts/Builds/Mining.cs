@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Assets.Scripts.ResourcesItem;
+using Ell.Resources;
+using Ell.UI;
 
-namespace Assets.Scripts.Builds
+namespace Ell.Builds
 {
     public class Mining : Base, IMining
     {
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Builds
         public int LevelCountCreate { get; protected set; } = 1;
         public int LevelCountCreateFromOnClick { get; protected set; } = 1;
         private static GameObject PanelBuilds;
-        
+
         public delegate void Del();
         public Del OnIncriseCountPerSecond;
         public Del OnIncriseCountFromOnClick;
@@ -39,7 +40,7 @@ namespace Assets.Scripts.Builds
         }
         private void ImprovementTimeCreate()
         {
-            CountCreate+=10;
+            CountCreate += 10;
             LevelCountCreate++;
             if (PanelBuilds.transform.parent.gameObject.activeSelf == true && isBuildSelection)
             {
@@ -95,11 +96,11 @@ namespace Assets.Scripts.Builds
                 {
                     ButtonClick.onClick?.Invoke();
                 }
-                
+
                 return CurrentCount;
             }
-            
-            
+
+
         }
         public override void OnClick()
         {

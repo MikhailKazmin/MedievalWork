@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.Scripts.ResourcesItem;
-//using static Assets.Scripts.Workers;
+using Ell.Resources;
+using Ell.BaseScripts;
 
-namespace Assets.Scripts.Builds
+namespace Ell.Builds
 {
     public class Creator : MonoBehaviour
     {
@@ -24,7 +24,7 @@ namespace Assets.Scripts.Builds
 
         public void Builds()
         {
-            var obj = Instantiate(MineObj, transform.GetChild(((int)TypeBuilds.Mines)));
+            var obj = Instantiate(MineObj, transform.GetChild((int)TypeBuilds.Mines));
             obj.name = $"{TypeBuilds.Mines}_{MinesList.Count}";
             obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(Random.Range(-450f, 450f), Random.Range(-1100f, 1100f));
             MinesList.Add(obj);

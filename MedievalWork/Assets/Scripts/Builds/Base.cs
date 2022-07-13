@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.ResourcesItem;
+using Ell.Resources;
 using System.Linq;
 
-namespace Assets.Scripts.Builds
+namespace Ell.Builds
 {
     public abstract class Base : MonoBehaviour
     {
@@ -13,7 +13,7 @@ namespace Assets.Scripts.Builds
         public bool isBuildSelection { get; protected set; } = false;
         public delegate void Del();
         public Del OnUnSeliction { get; protected set; }
-        
+
         public List<Data> dataResources { get; protected set; }
         public Dictionary<ResourcesName, int> ResourcesCount { get; protected set; }
 
@@ -21,9 +21,9 @@ namespace Assets.Scripts.Builds
         {
             ButtonClick = GetComponent<Button>();
             ButtonClick.onClick.AddListener(() => OnClick());
-            Debug.Log($"Awake to {this.GetType()}");
+            Debug.Log($"Awake to {GetType()}");
             ResourcesCount = GetResources();
-            dataResources = Resources.LoadAll<Data>("Resources").ToList();
+            dataResources = UnityEngine.Resources.LoadAll<Data>("Resources").ToList();
             OnUnSeliction += () => isBuildSelection = false;
         }
 
