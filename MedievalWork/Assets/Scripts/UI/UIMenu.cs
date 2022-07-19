@@ -14,10 +14,26 @@ namespace Ell.UI
         private Image _Icon;
         private Transform _Data;
         private Transform _Improvment; //Frame-BuyImprovements
-        private TextMeshProUGUI _ImprovmentMaxCount;
-        private TextMeshProUGUI _ImprovmentVelocity;
 
-        private void Init(GameObject PanelCart)
+        private Transform _Improvments;
+        private Transform _ImprovmentPrefCountCreateBuild;
+        private Transform _ImprovmentPrefStatsCountCreateBuild;
+        private TextMeshProUGUI _ImprovmentPrefStatsNameCountMax;
+        private TextMeshProUGUI _ImprovmentPrefStatsLVLCountMax;
+        private TextMeshProUGUI _ImprovmentPrefStatsCountMax;
+        private Button _ImprovmentPrefButtonMaxCount;
+        private TextMeshProUGUI _ImprovmentPrefButtonMaxCountCost;
+
+        private Transform _ImprovmentPrefOnClick;
+        private Transform _ImprovmentPrefStatsOnClick;
+        private TextMeshProUGUI _ImprovmentPrefStatsNameVelocity;
+        private TextMeshProUGUI _ImprovmentPrefStatsLVLVelocity;
+        private TextMeshProUGUI _ImprovmentPrefStatsCountVelocity;
+        private Button _ImprovmentPrefButtonVelocity;
+        private TextMeshProUGUI _ImprovmentPrefButtonVelocityCost;
+
+
+        private void Init(GameObject PanelCart, Base _script)
         {
             if (_Name == null && _Exit == null && _MenuObjects == null && _Previous == null && _Next == null)
             {
@@ -30,33 +46,48 @@ namespace Ell.UI
             _Panel = PanelCart.transform;
             _Icon = _Panel.GetChild(0).GetChild(0).GetComponentInChildren<Image>();
             _Data = _Panel.GetChild(1);
-            _ImprovmentMaxCount = _Panel.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
-            _ImprovmentVelocity = _Panel.GetChild(2).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>();
-            _Improvment = _Panel.GetChild(2).GetChild(1);
+
+            _Improvments = _Panel.GetChild(2);
+
+            _ImprovmentPrefCountCreateBuild = _Improvments.GetChild(0);
+            _ImprovmentPrefStatsCountCreateBuild = _ImprovmentPrefCountCreateBuild.GetChild(1);
+            _ImprovmentPrefStatsNameCountMax = _ImprovmentPrefStatsCountCreateBuild.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsLVLCountMax = _ImprovmentPrefStatsCountCreateBuild.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsCountMax = _ImprovmentPrefStatsCountCreateBuild.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonMaxCount = _ImprovmentPrefCountCreateBuild.GetChild(2).GetComponent<Button>();
+            _ImprovmentPrefButtonMaxCountCost = _ImprovmentPrefButtonMaxCount.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonMaxCountCost.text = $"{HowCostImprovement(_script.LevelMaxCount, _script.CostUpdate)}$";
+
+            _ImprovmentPrefOnClick = _Improvments.GetChild(1);
+            _ImprovmentPrefStatsOnClick = _ImprovmentPrefOnClick.GetChild(1);
+            _ImprovmentPrefStatsNameVelocity = _ImprovmentPrefStatsOnClick.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsLVLVelocity = _ImprovmentPrefStatsOnClick.GetChild(1).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefStatsCountVelocity = _ImprovmentPrefStatsOnClick.GetChild(2).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonVelocity = _ImprovmentPrefOnClick.GetChild(2).GetComponent<Button>();
+            _ImprovmentPrefButtonVelocityCost = _ImprovmentPrefButtonVelocity.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _ImprovmentPrefButtonVelocityCost.text = $"{HowCostImprovement(_script.LevelVelocity, _script.CostUpdate)}$";
         }
         public void OnPrintedCurrent(Base Script, GameObject PanelCart, Sprite Cart)
         {
-            
             if (PanelCart.transform.parent.gameObject.activeSelf != true)
             {
-                Init(PanelCart);
-                
+                Init(PanelCart, Script);
                 _Panel.gameObject.SetActive(true);
                 _MenuObjects.gameObject.SetActive(true);
                 _Name.text = Script.transform.name;
                 //_Icon.sprite = Cart;
-                _Improvment.GetChild(0).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveCountMax(Script));
-                _Improvment.GetChild(1).GetComponent<Button>().onClick.AddListener(() => OnButtonImproveVelocity(Script));
                 _Exit.onClick.AddListener(() => OnExitPanelCart(Script));
                 _Previous.onClick.AddListener(() => _PreviousWorker(Script));
                 _Next.onClick.AddListener(() => _NextWorker(Script));
+                _ImprovmentPrefButtonMaxCount.onClick.AddListener(() => OnButtonImproveCountMax(Script));
+                _ImprovmentPrefButtonVelocity.onClick.AddListener(() => OnButtonImproveVelocity(Script));
             }
+            PrintImproveVelocity(Script);
+            PrintImproveCountMax(Script);
             PrintCurrentResourcesInCart(Script);
-            PrintCurrentPropertiesCart(Script);
             _Next.gameObject.SetActive(true);
             _Previous.gameObject.SetActive(true);
         }
-
         private void _PreviousWorker(Base _script)
         {
             _Exit.onClick.Invoke();
@@ -70,11 +101,6 @@ namespace Ell.UI
             var NumberCurrentBuild = _script.transform.GetSiblingIndex();
             if (NumberCurrentBuild < _script.transform.parent.childCount - 1) _script.transform.parent.GetChild(++NumberCurrentBuild).GetComponent<Button>().onClick.Invoke();
             else _script.transform.parent.GetChild(0).GetComponent<Button>().onClick.Invoke();
-        }
-        private void PrintCurrentPropertiesCart(Base Script)
-        {
-            _ImprovmentMaxCount.text = Script.CountMax.ToString();
-            _ImprovmentVelocity.text = Script.timeMove.ToString(); 
         }
         private void PrintCurrentResourcesInCart(Base Script)
         {
@@ -101,25 +127,61 @@ namespace Ell.UI
         }
         private void OnExitPanelCart(Base Script)
         {
-            Debug.Log($"{this.GetType()} ");
             Script.OnUnSelictionCurrentCart?.Invoke();
-            _Improvment.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
-            _Improvment.GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+            _ImprovmentPrefButtonMaxCount.onClick.RemoveAllListeners();
+            _ImprovmentPrefButtonVelocity.onClick.RemoveAllListeners();
             _Previous.onClick.RemoveAllListeners();
             _Next.onClick.RemoveAllListeners();
             _Exit.onClick.RemoveAllListeners();
             _MenuObjects.gameObject.SetActive(false);
             _Panel.gameObject.SetActive(false);
         }
-        private void OnButtonImproveCountMax(Base Script)
+        private void OnButtonImproveCountMax(Base _script)
         {
-            Script.OnIncriseCountMax?.Invoke();
-            _ImprovmentMaxCount.text = (Script.CountMax).ToString();
+            int cost = 0;
+            cost = HowCostImprovement(_script.LevelMaxCount, _script.CostUpdate);
+            
+            if (Money.CheckOnBuy(cost))
+            {
+                Debug.Log(cost.ToString());
+                Money.ReduceCount(cost);
+                _script.OnIncriseCountMax?.Invoke();
+            }
+            PrintImproveCountMax(_script);
         }
-        private void OnButtonImproveVelocity(Base Script)
+        private void OnButtonImproveVelocity(Base _script)
         {
-            Script.OnIncriseVelocity?.Invoke();
-            _ImprovmentVelocity.text = (Script.timeMove).ToString();
+            int cost = 0;
+            cost = HowCostImprovement(_script.LevelVelocity, _script.CostUpdate);
+            if (Money.CheckOnBuy(cost))
+            {
+                Debug.Log(cost.ToString());
+                Money.ReduceCount(cost);
+                _script.OnIncriseVelocity?.Invoke();
+            }
+            PrintImproveVelocity(_script);
+        }
+        private void PrintImproveVelocity(Base _script)
+        {
+            _ImprovmentPrefButtonVelocityCost.text = $"{HowCostImprovement(_script.LevelVelocity, _script.CostUpdate)}$";
+            _ImprovmentPrefStatsNameVelocity.text = "Скорость";
+            _ImprovmentPrefStatsLVLVelocity.text = _script.LevelVelocity.ToString() + " LVL";
+            _ImprovmentPrefStatsCountVelocity.text = _script.timeMove.ToString() + " Км/ч";
+        }
+        private void PrintImproveCountMax(Base _script)
+        {
+            _ImprovmentPrefButtonMaxCountCost.text = $"{HowCostImprovement(_script.LevelMaxCount, _script.CostUpdate)}$";
+            _ImprovmentPrefStatsNameCountMax.text = "Вместимость";
+            _ImprovmentPrefStatsLVLCountMax.text = _script.LevelMaxCount.ToString() + " LVL";
+            _ImprovmentPrefStatsCountMax.text = _script.CountMax.ToString();
+        }
+        private int HowCostImprovement(int level, List<int> cost)
+        {
+            if (level < 10) return cost[0];
+            else if (level < 20) return cost[1];
+            else if (level < 30) return cost[2];
+            else if (level < 40) return cost[3];
+            return 50;
         }
     }
 }

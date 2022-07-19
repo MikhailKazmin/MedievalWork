@@ -32,6 +32,9 @@ namespace Ell.Workers
         public Del OnIncriseVelocity;
         private bool isCurrentCartSelection = false;
         private UIMenu uIMenu = new UIMenu();
+        public List<int> CostUpdate { get; private set; } = new List<int>() { 10, 20, 30, 40 };
+        public int LevelMaxCount { get; protected set; } = 1;
+        public int LevelVelocity { get; protected set; } = 1;
 
         public Dictionary<ResourcesName, int> ResourcesCount { get; private set; }
         public int CountMax { get; private set; } = 5;
@@ -143,8 +146,16 @@ namespace Ell.Workers
         {
             this.PanelCart = PanelCart;
             this.MineScripts = MineScripts;
-            OnIncriseCountMax += () => CountMax += 5;
-            OnIncriseVelocity += () => timeMove += 10;
+            OnIncriseCountMax += () =>
+            {
+                LevelMaxCount += 1;
+                CountMax += 5;
+            };
+            OnIncriseVelocity += () =>
+            {
+                LevelVelocity += 1;
+                timeMove += 10;
+            };
         }
         enum AnimName
         {

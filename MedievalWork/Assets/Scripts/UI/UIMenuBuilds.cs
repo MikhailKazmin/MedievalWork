@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 using Ell.Builds;
+using System.Collections.Generic;
+using Ell.Resources;
 
 namespace Ell.UI
 {
@@ -64,7 +66,7 @@ namespace Ell.UI
             _ImprovmentPrefStatsCountCreateBuildCount = _ImprovmentPrefStatsCountCreateBuild.GetChild(2).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefButtonCountCreateBuild = _ImprovmentPrefCountCreateBuild.GetChild(2).GetComponent<Button>();
             _ImprovmentPrefButtonCountCreateBuildCost = _ImprovmentPrefButtonCountCreateBuild.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            _ImprovmentPrefButtonCountCreateBuildCost.text = "1";
+            _ImprovmentPrefButtonCountCreateBuildCost.text = $"{HowCostImprovement(Script.LevelCountCreate, Script.CostUpdate)}$";
 
             _ImprovmentPrefOnClick = _Improvments.GetChild(1);
             _ImprovmentPrefStatsOnClick = _ImprovmentPrefOnClick.GetChild(1);
@@ -73,7 +75,7 @@ namespace Ell.UI
             _ImprovmentPrefStatsCountOnClick = _ImprovmentPrefStatsOnClick.GetChild(2).GetComponent<TextMeshProUGUI>();
             _ImprovmentPrefButtonOnClick = _ImprovmentPrefOnClick.GetChild(2).GetComponent<Button>();
             _ImprovmentPrefButtonOnClickCost = _ImprovmentPrefButtonOnClick.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            _ImprovmentPrefButtonOnClickCost.text = "1";
+            _ImprovmentPrefButtonOnClickCost.text = $"{HowCostImprovement(Script.LevelCountCreateFromOnClick, Script.CostUpdate)}$";
         }
         public void OnPrintedCurrent(GameObject Panel, Base Script)
         {
@@ -98,6 +100,8 @@ namespace Ell.UI
                 PrintStatsImprovementCountFromClick(Script as Mining);
             }
             PrintResourcesInBuild(Script as Mining);
+            PrintStatsImprovementCountFromClick(Script as Mining);
+            PrintStatsImprovementCountCreate(Script as Mining);
             _Next.gameObject.SetActive(true);
             _Previous.gameObject.SetActive(true);
         }
@@ -170,13 +174,35 @@ namespace Ell.UI
         }
         private void OnButtonImproveCountMax(Mining _script)
         {
-            _script.OnIncriseCountPerSecond?.Invoke();
-            PrintStatsImprovementCountCreate(_script);
+            int cost = 0;
+            cost = HowCostImprovement(_script.LevelCountCreate, _script.CostUpdate);
+            if (Money.CheckOnBuy(cost))
+            {
+                Money.ReduceCount(cost);
+                _script.OnIncriseCountPerSecond?.Invoke();
+                PrintStatsImprovementCountCreate(_script);
+            }
         }
         private void OnButtonImproveCountFromClick(Mining _script)
         {
-            _script.OnIncriseCountFromOnClick?.Invoke();
-            PrintStatsImprovementCountFromClick(_script);
+            int cost = 0;
+            cost = HowCostImprovement(_script.LevelCountCreate, _script.CostUpdate);
+            if (Money.CheckOnBuy(cost))
+            {
+                Money.ReduceCount(cost);
+                _script.OnIncriseCountFromOnClick?.Invoke();
+                PrintStatsImprovementCountFromClick(_script);
+            }
+
+        }
+
+        private int HowCostImprovement(int level, List<int> cost)
+        {
+            if (level < 10) return cost[0];
+            else if (level < 20) return cost[1];
+            else if (level < 30) return cost[2];
+            else if (level < 40) return cost[3];
+            return 50;
         }
     }
 }

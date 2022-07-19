@@ -15,6 +15,7 @@ namespace Ell.Builds
         public int LevelCountCreate { get; protected set; } = 1;
         public int LevelCountCreateFromOnClick { get; protected set; } = 1;
         private static GameObject PanelBuilds;
+        public List<int> CostUpdate { get; private set; } = new List<int>() { 10, 20, 30, 40 };
 
         public delegate void Del();
         public Del OnIncriseCountPerSecond;
