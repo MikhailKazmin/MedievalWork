@@ -48,7 +48,7 @@ namespace Ell.Resources
                 _but.interactable = true;
             }
             else _but.interactable = false;
-            _textCount.text = _count.ToString();
+            _textCount.text = _count.ToString() + "$";
         }
         public static bool CheckOnBuy(int Cost) => _count - Cost >= 0;
         public static int AddCount(int count)

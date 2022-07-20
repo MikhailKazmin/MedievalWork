@@ -95,12 +95,13 @@ namespace Ell.UI
                 _OnClickToAdd.onClick.AddListener(() => AddResourcesCountFromClick(Script as Mining));
                 _Name.text = Script.transform.name;
                 _ImprovmentPrefButtonCountCreateBuild.onClick.AddListener(() => OnButtonImproveCountMax(Script as Mining));
-                _ImprovmentPrefButtonOnClick.onClick.AddListener(() => OnButtonImproveCountFromClick(Script as Mining));
+                //_ImprovmentPrefButtonOnClick.onClick.AddListener(() => OnButtonImproveCountFromClick(Script as Mining));
                 PrintStatsImprovementCountCreate(Script as Mining);
                 PrintStatsImprovementCountFromClick(Script as Mining);
             }
             PrintResourcesInBuild(Script as Mining);
             PrintStatsImprovementCountFromClick(Script as Mining);
+
             PrintStatsImprovementCountCreate(Script as Mining);
             _Next.gameObject.SetActive(true);
             _Previous.gameObject.SetActive(true);

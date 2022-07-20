@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using Ell.Resources;
 using Ell.UI;
+using UnityEngine.UI;
 
 namespace Ell.Builds
 {
@@ -49,6 +50,16 @@ namespace Ell.Builds
         {
             base.OnClick();
             uIMenu.OnPrintedCurrent(PanelStorage, this);
+        }
+
+        public void OnClickButtonBar()
+        {
+            if (!PanelStorage.gameObject.activeSelf)
+            {
+                if (PanelStorage.transform.parent.gameObject.activeSelf) PanelStorage.transform.parent.GetChild(0).GetComponent<Button>().onClick.Invoke();
+                OnClick();
+            }
+            else PanelStorage.transform.parent.GetChild(0).GetComponent<Button>().onClick.Invoke();
         }
 
     }
