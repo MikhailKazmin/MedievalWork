@@ -85,6 +85,13 @@ namespace Ell.UI
         private void QWe(Storage _script)
         {
             _script.ReduceCount(_currentResource, (int)_countSell.value);
+            if (!_script.ResourcesCount.ContainsKey(_currentResource))
+            {
+                //_sell.onClick.RemoveAllListeners();
+                //_countSell.onValueChanged.RemoveAllListeners();
+                _sell.gameObject.SetActive(false);
+                _countSell.gameObject.SetActive(false);
+            }
         }
         private void AddListener(Button button, ResourcesName resourcesName, Storage _script)
         {
@@ -157,6 +164,7 @@ namespace Ell.UI
             _Panel.gameObject.SetActive(false);
             _sell.onClick.RemoveAllListeners();
             _sell.gameObject.SetActive(false);
+            //_countSell.onValueChanged.RemoveAllListeners();
             _countSell.gameObject.SetActive(false);
         }
     }
