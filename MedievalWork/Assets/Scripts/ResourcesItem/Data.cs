@@ -13,8 +13,13 @@ namespace Ell.Resources
         public Sprite sprite;
         public ResourcesName resourcesName;
         public int Cost;
+        public Type type;
     }
-
+    public enum Type
+    {
+        Mining,
+        Produce
+    }
 
     class NewCount
     {
